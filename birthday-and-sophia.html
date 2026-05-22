@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tillykke And-Sophia!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink:        #f472b6;
+    --pink-light:  #fce7f3;
+    --pink-deep:   #be185d;
+    --pink-mid:    #ec4899;
+    --gold:        #c9a96e;
+    --gold-light:  #e8d5a3;
+    --cream:       #fff5fb;
+    --dark:        #1a0814;
+    --blush:       #fda4d0;
+    --accent:      #db2777;
+  }
+
+  body {
+    background: radial-gradient(ellipse at 60% 30%, #2d0a1e 0%, #1a0814 60%, #0d0408 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+  .scene { position: relative; z-index: 1; }
+
+  .card-wrapper {
+    position: relative;
+    width: min(420px, 92vw);
+    height: min(590px, 88vh);
+    animation: cardReveal 1s cubic-bezier(0.2,0,0.2,1) both;
+  }
+
+  @keyframes cardReveal {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+  }
+
+  .card { width: 100%; height: 100%; position: relative; cursor: pointer; }
+
+  .card-front, .card-back {
+    position: absolute; inset: 0; border-radius: 6px; overflow: hidden;
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    -webkit-transition: opacity 0.45s ease, -webkit-transform 0.45s ease;
+  }
+
+  .card-front { opacity: 1; transform: scale(1);    pointer-events: auto;  z-index: 2; }
+  .card-back  { opacity: 0; transform: scale(0.96); pointer-events: none;  z-index: 1; }
+  .card.flipped .card-front { opacity: 0; transform: scale(0.96); pointer-events: none; }
+  .card.flipped .card-back  { opacity: 1; transform: scale(1);    pointer-events: auto; }
+
+  /* ── FRONT ── */
+  .card-front {
+    background: linear-gradient(160deg, #fff5fb 0%, #fce7f3 50%, #fdf2f8 100%);
+    border: 1.5px solid var(--pink);
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: space-between;
+    padding: 36px 28px 28px;
+    box-shadow:
+      0 0 0 4px rgba(244,114,182,0.08),
+      0 0 60px rgba(244,114,182,0.25),
+      0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  /* Pink shimmer border layer */
+  .card-front::before {
+    content: '';
+    position: absolute; inset: 8px;
+    border: 1px solid rgba(244,114,182,0.35);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  /* Extra glow layer */
+  .card-front::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(244,114,182,0.15) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .corner-ornament {
+    position: absolute; font-size: 18px;
+    color: var(--pink); opacity: 0.8;
+  }
+  .corner-ornament.tl { top: 14px; left: 14px; }
+  .corner-ornament.tr { top: 14px; right: 14px; }
+  .corner-ornament.bl { bottom: 14px; left: 14px; }
+  .corner-ornament.br { bottom: 14px; right: 14px; }
+
+  .brand-tag {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px; letter-spacing: 0.35em;
+    color: var(--pink-deep); text-transform: uppercase; opacity: 0.85;
+    position: relative; z-index: 1;
+  }
+
+  /* Cat illustration */
+  .illustration {
+    position: relative;
+    width: min(210px, 50vw); height: min(210px, 50vw);
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 6px 18px rgba(244,114,182,0.35));
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-9px); }
+  }
+
+  .cat-svg { width: 100%; height: 100%; }
+
+  .bag-charm {
+    position: absolute; bottom: -8px; right: -8px;
+    width: 66px; height: 66px;
+    animation: float 4s ease-in-out infinite 0.6s;
+    filter: drop-shadow(0 4px 10px rgba(219,39,119,0.4));
+  }
+
+  /* Autonomous sparkles on front */
+  .auto-sparkle {
+    position: absolute;
+    pointer-events: none;
+    font-size: 14px;
+    animation: sparklePop 1.8s ease-out forwards;
+    z-index: 3;
+  }
+  @keyframes sparklePop {
+    0%   { opacity: 0;   transform: scale(0) rotate(0deg); }
+    30%  { opacity: 1;   transform: scale(1.3) rotate(20deg); }
+    100% { opacity: 0;   transform: scale(0.4) rotate(-10deg) translateY(-22px); }
+  }
+
+  .front-title { text-align: center; position: relative; z-index: 1; }
+
+  .front-title .year {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 0.3em;
+    color: var(--pink-deep); text-transform: uppercase;
+    display: block; margin-bottom: 6px;
+  }
+
+  .front-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 32px); font-weight: 700;
+    color: var(--pink-deep); line-height: 1.1;
+  }
+
+  .front-title h1 em { font-style: italic; color: var(--accent); }
+
+  .click-hint {
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--pink); opacity: 0.7; text-transform: uppercase;
+    animation: pulse 2s ease-in-out infinite;
+    position: relative; z-index: 1;
+  }
+
+  @keyframes pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
+
+  /* Glitter dots */
+  .card-front .glitter {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: glitter 1.2s ease-out forwards;
+    opacity: 0; z-index: 5;
+  }
+  @keyframes glitter {
+    0%   { opacity: 1; transform: scale(0); }
+    40%  { opacity: 0.9; transform: scale(1.8); }
+    100% { opacity: 0; transform: scale(0.3) translateY(-18px); }
+  }
+
+  /* ── BACK ── */
+  .card-back {
+    background: linear-gradient(145deg, #3d0a28 0%, #1f0616 60%, #2d0a1e 100%);
+    display: flex; flex-direction: column;
+    padding: clamp(30px,6vw,48px) clamp(24px,6vw,38px) clamp(22px,5vw,36px);
+    box-shadow: 0 0 60px rgba(244,114,182,0.2), 0 20px 60px rgba(0,0,0,0.7);
+    position: relative; overflow: hidden;
+  }
+
+  .card-back::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 15%, rgba(244,114,182,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 85%, rgba(201,169,110,0.08) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .back-ornament {
+    position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, transparent, var(--pink), var(--blush), var(--pink), transparent);
+  }
+  .back-ornament-bottom {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, transparent, var(--pink), var(--blush), var(--pink), transparent);
+  }
+
+  .back-label {
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--blush); opacity: 0.65;
+    text-transform: uppercase; margin-bottom: 22px;
+    position: relative; z-index: 1;
+  }
+
+  .back-message {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(13px,3.5vw,15px); line-height: 1.95;
+    color: var(--pink-light); font-style: italic;
+    position: relative; z-index: 1; flex: 1;
+  }
+
+  .back-message .highlight {
+    color: var(--blush); font-style: normal; font-weight: 600;
+  }
+
+  .age-reveal {
+    margin-top: 24px; position: relative; z-index: 1; text-align: center;
+  }
+
+  .age-counter-area { cursor: pointer; transition: transform 0.2s; }
+  .age-counter-area:active { transform: scale(0.96); }
+
+  .age-reveal .number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px,15vw,72px); font-weight: 700;
+    color: var(--pink); line-height: 1; display: block;
+    text-shadow: 0 0 30px rgba(244,114,182,0.6), 0 0 60px rgba(244,114,182,0.3);
+  }
+
+  .age-reveal .number-label {
+    font-size: 11px; letter-spacing: 0.35em;
+    color: var(--blush); opacity: 0.75;
+    text-transform: uppercase; margin-top: 4px; display: block;
+  }
+
+  .tap-hint {
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--blush); opacity: 0.5; text-transform: uppercase;
+    text-align: center; margin-top: 6px; display: block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .back-signature {
+    margin-top: 20px; position: relative; z-index: 1;
+    text-align: right; font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 14px; color: var(--blush); opacity: 0.85;
+    border-top: 1px solid rgba(244,114,182,0.2); padding-top: 14px;
+  }
+
+  /* Confetti */
+  .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
+  .confetti-piece {
+    position: absolute; opacity: 0;
+    animation: confettiFall 2.5s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
+  }
+
+  /* Paw trail */
+  .paw {
+    position: fixed; pointer-events: none; font-size: 18px;
+    opacity: 0; z-index: 200;
+    animation: pawFade 0.8s ease-out forwards;
+    transform: translate(-50%,-50%);
+  }
+  @keyframes pawFade {
+    0%   { opacity: 0.85; transform: translate(-50%,-50%) scale(1.2); }
+    100% { opacity: 0;    transform: translate(-50%,-50%) scale(0.4) translateY(-20px); }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<div class="scene">
+  <div class="card-wrapper">
+    <div class="card" id="card">
+
+      <!-- FRONT -->
+      <div class="card-front" id="cardFront">
+        <span class="corner-ornament tl">✦</span>
+        <span class="corner-ornament tr">✦</span>
+        <span class="corner-ornament bl">✦</span>
+        <span class="corner-ornament br">✦</span>
+
+        <div class="brand-tag">Une édition spéciale · 1993</div>
+
+        <div class="illustration">
+          <svg class="cat-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Glow base -->
+            <ellipse cx="100" cy="148" rx="54" ry="30" fill="#f472b6" opacity="0.08"/>
+            <!-- Tail -->
+            <path d="M148 155 Q178 128 168 104 Q160 86 150 100" stroke="#be185d" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <!-- Body -->
+            <ellipse cx="100" cy="140" rx="48" ry="38" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2"/>
+            <!-- Head -->
+            <ellipse cx="100" cy="88" rx="38" ry="36" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2"/>
+            <!-- Ear left -->
+            <polygon points="68,68 58,40 82,62" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2" stroke-linejoin="round"/>
+            <polygon points="70,66 64,49 79,63" fill="#fce7f3" opacity="0.9"/>
+            <!-- Ear right -->
+            <polygon points="132,68 142,40 118,62" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2" stroke-linejoin="round"/>
+            <polygon points="130,66 136,49 121,63" fill="#fce7f3" opacity="0.9"/>
+            <!-- Eyes -->
+            <ellipse cx="86" cy="86" rx="7" ry="8" fill="#1a0814"/>
+            <ellipse cx="114" cy="86" rx="7" ry="8" fill="#1a0814"/>
+            <circle cx="88" cy="84" r="2.2" fill="white"/>
+            <circle cx="116" cy="84" r="2.2" fill="white"/>
+            <ellipse cx="86" cy="87" rx="4" ry="5" fill="#db2777" opacity="0.55"/>
+            <ellipse cx="114" cy="87" rx="4" ry="5" fill="#db2777" opacity="0.55"/>
+            <!-- Nose -->
+            <polygon points="100,96 97,100 103,100" fill="#fda4d0"/>
+            <!-- Mouth -->
+            <path d="M97,100 Q100,105 103,100" stroke="#be185d" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- Whiskers -->
+            <line x1="82" y1="98" x2="54" y2="93" stroke="#be185d" stroke-width="1" opacity="0.45"/>
+            <line x1="82" y1="101" x2="54" y2="101" stroke="#be185d" stroke-width="1" opacity="0.45"/>
+            <line x1="82" y1="104" x2="54" y2="109" stroke="#be185d" stroke-width="1" opacity="0.45"/>
+            <line x1="118" y1="98" x2="146" y2="93" stroke="#be185d" stroke-width="1" opacity="0.45"/>
+            <line x1="118" y1="101" x2="146" y2="101" stroke="#be185d" stroke-width="1" opacity="0.45"/>
+            <line x1="118" y1="104" x2="146" y2="109" stroke="#be185d" stroke-width="1" opacity="0.45"/>
+            <!-- Chest fluff -->
+            <ellipse cx="100" cy="118" rx="18" ry="12" fill="white" opacity="0.6"/>
+            <!-- Legs -->
+            <ellipse cx="80" cy="175" rx="14" ry="10" fill="#fff5fb" stroke="#f472b6" stroke-width="1"/>
+            <ellipse cx="120" cy="175" rx="14" ry="10" fill="#fff5fb" stroke="#f472b6" stroke-width="1"/>
+            <line x1="74" y1="178" x2="74" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
+            <line x1="80" y1="179" x2="80" y2="184" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
+            <line x1="86" y1="178" x2="86" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
+            <line x1="114" y1="178" x2="114" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
+            <line x1="120" y1="179" x2="120" y2="184" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
+            <line x1="126" y1="178" x2="126" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
+            <!-- Crown -->
+            <g transform="translate(100,56)">
+              <polygon points="0,-13 -4,-4 4,-4" fill="#f472b6"/>
+              <polygon points="-9,-8 -13,0 -5,0" fill="#f472b6"/>
+              <polygon points="9,-8 13,0 5,0" fill="#f472b6"/>
+              <ellipse cx="0" cy="-4" rx="5.5" ry="5.5" fill="#ec4899" stroke="#fce7f3" stroke-width="1"/>
+              <circle cx="0" cy="-4" r="2" fill="#fce7f3" opacity="0.8"/>
+            </g>
+            <!-- Bow on tail tip -->
+            <g transform="translate(152,100)">
+              <ellipse cx="-6" cy="0" rx="5" ry="3" fill="#f472b6" opacity="0.8" transform="rotate(-20)"/>
+              <ellipse cx="6" cy="0" rx="5" ry="3" fill="#f472b6" opacity="0.8" transform="rotate(20)"/>
+              <circle cx="0" cy="0" r="2.5" fill="#ec4899"/>
+            </g>
+          </svg>
+
+          <!-- Handbag charm — now pink -->
+          <div class="bag-charm">
+            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <path d="M28 28 Q28 13 40 13 Q52 13 52 28" stroke="#be185d" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <rect x="18" y="28" width="44" height="36" rx="6" fill="#ec4899" stroke="#fda4d0" stroke-width="1.5"/>
+              <path d="M18 44 Q40 37 62 44" stroke="#fda4d0" stroke-width="1.2" fill="none"/>
+              <circle cx="40" cy="44" r="4.5" fill="#fda4d0"/>
+              <circle cx="40" cy="44" r="2" fill="white" opacity="0.8"/>
+              <line x1="18" y1="56" x2="62" y2="56" stroke="#fda4d0" stroke-width="0.8" opacity="0.5"/>
+              <!-- LV-style pattern hint -->
+              <text x="27" y="40" font-size="7" fill="#fce7f3" opacity="0.4" font-family="serif">✦</text>
+              <text x="44" y="40" font-size="7" fill="#fce7f3" opacity="0.4" font-family="serif">✦</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="front-title">
+          <span class="year">Klasse af 1993</span>
+          <h1>Tillykke<br/><em>And-Sophia</em></h1>
+        </div>
+
+        <div class="click-hint">✦ &nbsp; Åbn kortet &nbsp; ✦</div>
+      </div>
+
+      <!-- BACK -->
+      <div class="card-back">
+        <div class="back-ornament"></div>
+        <div class="back-ornament-bottom"></div>
+
+        <div class="back-label">✦ Din særlige dag ✦</div>
+
+        <div class="back-message">
+          Kære <span class="highlight">And-Sophia</span>,<br><br>
+          Siden 1993 har verden haft dig — og det er et privilegium.<br><br>
+          Du er som en <span class="highlight">designer-taske</span>: tidløs, stilfuld og med en charme der aldrig går af mode.<br><br>
+          Og ligesom en kat lever du på dine egne præmisser — elegant, uafhængig <span class="highlight">(ish)</span> og altid med perfekt timing.
+        </div>
+
+        <div class="age-reveal">
+          <div class="age-counter-area" id="ageCounter">
+            <span class="number" id="ageNumber">32</span>
+            <span class="number-label">år & fantastisk</span>
+            <span class="tap-hint">✦ tryk for at fejre ✦</span>
+          </div>
+        </div>
+
+        <div class="back-signature">Med kærlighed & konfetti 🐾</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Particles (mix of pink + gold) ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+const stars = Array.from({length: 110}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random() * 1.8 + 0.3,
+  speed: Math.random() * 0.003 + 0.001,
+  offset: Math.random() * Math.PI * 2,
+  pink: Math.random() > 0.45   // 55% pink, 45% gold
+}));
+
+function drawParticles(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const a = 0.25 + 0.6 * Math.abs(Math.sin(t * s.speed + s.offset));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.pink ? `rgba(244,114,182,${a})` : `rgba(201,169,110,${a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+requestAnimationFrame(drawParticles);
+
+// ── Card flip (bulletproof for Messenger/WebView) ──
+const card = document.getElementById('card');
+let flipped = false;
+let touchMoved = false;
+
+function doFlip() {
+  flipped = !flipped;
+  card.classList.toggle('flipped', flipped);
+  if (flipped) launchConfetti(25);
+}
+
+// Track if finger moved (to avoid flip on scroll)
+card.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+card.addEventListener('touchmove',  () => { touchMoved = true;  }, { passive: true });
+card.addEventListener('touchend', e => {
+  if (touchMoved) return;
+  if (e.target.closest('#ageCounter')) return;
+  doFlip();
+}, { passive: true });
+
+// Fallback click for non-touch
+card.addEventListener('click', e => {
+  if (e.target.closest('#ageCounter')) return;
+  // Only fire on click if no touch support (avoids double-fire)
+  if (!('ontouchstart' in window)) doFlip();
+});
+
+// ── Glitter on touch/move (more + multi-colour) ──
+const cardFront = document.getElementById('cardFront');
+const glitterColors = ['#f472b6','#fda4d0','#ec4899','#fce7f3','#e8d5a3','#fff','#db2777'];
+const glitterSizes  = [3, 4, 5, 6, 7, 8];
+
+function spawnGlitter(x, y, force = false) {
+  const threshold = force ? 0 : 0.55;   // fire more often (was 0.85)
+  if (!force && Math.random() > threshold) return;
+  const rect = cardFront.getBoundingClientRect();
+  const count = force ? 6 : 1;
+  for (let i = 0; i < count; i++) {
+    const g = document.createElement('div');
+    g.className = 'glitter';
+    const size = glitterSizes[Math.floor(Math.random() * glitterSizes.length)];
+    const color = glitterColors[Math.floor(Math.random() * glitterColors.length)];
+    const ox = (Math.random() - 0.5) * 30;
+    const oy = (Math.random() - 0.5) * 30;
+    g.style.cssText = `
+      left:${(x - rect.left) + ox}px;
+      top:${(y - rect.top) + oy}px;
+      width:${size}px; height:${size}px;
+      background:${color};
+      box-shadow: 0 0 ${size}px ${color};
+      animation-duration:${0.8 + Math.random()*0.8}s;
+    `;
+    cardFront.appendChild(g);
+    setTimeout(() => g.remove(), 1600);
+  }
+}
+
+cardFront.addEventListener('mousemove', e => spawnGlitter(e.clientX, e.clientY));
+cardFront.addEventListener('touchmove', e => {
+  const t = e.touches[0]; spawnGlitter(t.clientX, t.clientY);
+}, { passive: true });
+
+// Auto sparkles on front — spontaneous pink stars
+function autoSparkle() {
+  const rect = cardFront.getBoundingClientRect();
+  if (rect.width === 0) { setTimeout(autoSparkle, 600); return; }
+  const s = document.createElement('div');
+  s.className = 'auto-sparkle';
+  s.textContent = ['✦','✧','★','✿','♡','💖','✨'][Math.floor(Math.random()*7)];
+  s.style.left = (10 + Math.random() * 80) + '%';
+  s.style.top  = (10 + Math.random() * 80) + '%';
+  s.style.color = glitterColors[Math.floor(Math.random() * glitterColors.length)];
+  s.style.fontSize = (10 + Math.random() * 10) + 'px';
+  cardFront.appendChild(s);
+  setTimeout(() => s.remove(), 1900);
+  setTimeout(autoSparkle, 300 + Math.random() * 500);
+}
+setTimeout(autoSparkle, 1200);
+
+// ── Confetti (heavy on pink) ──
+const confettiColors = ['#f472b6','#fda4d0','#ec4899','#fce7f3','#c9a96e','#e8d5a3','#fff','#db2777'];
+const shapes = ['●','■','▲','✦','♦','🐾','👜','💖','✨'];
+
+function launchConfetti(count) {
+  const container = document.getElementById('confettiContainer');
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.top  = '-30px';
+      p.style.fontSize = (Math.random() * 16 + 10) + 'px';
+      p.style.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+      p.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
+      p.style.animationDelay   = (Math.random() * 0.5) + 's';
+      container.appendChild(p);
+      setTimeout(() => p.remove(), 3200);
+    }, i * 35);
+  }
+}
+
+// ── Age counter ──
+const ageCounter = document.getElementById('ageCounter');
+const ageNumber  = document.getElementById('ageNumber');
+let celebrating  = false;
+
+function handleAgeTap(e) {
+  e.stopPropagation();
+  if (celebrating) return;
+  celebrating = true;
+  launchConfetti(50);
+  let count = 0;
+  ageNumber.textContent = '0';
+  const iv = setInterval(() => {
+    count++;
+    ageNumber.textContent = count;
+    if (count >= 32) { clearInterval(iv); celebrating = false; }
+  }, 58);
+}
+ageCounter.addEventListener('click', handleAgeTap);
+ageCounter.addEventListener('touchend', e => {
+  if (!touchMoved) handleAgeTap(e);
+}, { passive: true });
+
+// ── Paw trail ──
+let lastPaw = 0;
+function spawnPaw(x, y) {
+  const now = Date.now();
+  if (now - lastPaw < 200) return;
+  lastPaw = now;
+  const p = document.createElement('div');
+  p.className = 'paw'; p.textContent = '🐾';
+  p.style.left = x + 'px'; p.style.top = y + 'px';
+  p.style.transform = `translate(-50%,-50%) rotate(${Math.random()*60-30}deg)`;
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 900);
+}
+document.addEventListener('pointermove', e => spawnPaw(e.clientX, e.clientY));
+document.addEventListener('touchmove', e => {
+  const t = e.touches[0]; spawnPaw(t.clientX, t.clientY);
+}, { passive: true });
+
+// ── Opening burst ──
+setTimeout(() => launchConfetti(18), 800);
+setTimeout(() => {
+  // burst of glitter on load
+  const rect = cardFront.getBoundingClientRect();
+  for (let i = 0; i < 12; i++) {
+    spawnGlitter(rect.left + rect.width * Math.random(), rect.top + rect.height * Math.random(), true);
+  }
+}, 500);
+</script>
+</body>
+</html>
