@@ -1,605 +1,1427 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tillykke And-Sophia!</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0d7ea3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Tillykke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap');
+/* ============================================================
+   FARVER
+   ============================================================ */
+:root{
+  --deep:#04263c;
+  --deep2:#075a7e;
+  --sea:#0d7ea3;
+  --sea-light:#3fc6dd;
+  --foam:#bdeef7;
+  --sand:#efdcb2;
+  --paper:#fdf7ea;
+  --paper2:#f6ebd6;
+  --ink:#22384a;
+  --ink-soft:#4c6377;
+  --gold:#c8973f;
+  --gold-light:#e8c66a;
+  --coral:#e2705a;
+  --wax:#b5382c;
+  --wax-dark:#8d2419;
+  --shadow:rgba(2,26,44,.45);
+}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
+body{
+  font-family:'Lora',Georgia,'Times New Roman',serif;
+  color:var(--ink);
+  background:linear-gradient(180deg,
+    #52d6e8 0%, #2bb6d4 12%, #128fb2 30%,
+    #0a6b91 50%, #075172 68%, #043a56 86%, #032c43 100%);
+  -webkit-font-smoothing:antialiased;
+  touch-action:manipulation;
+}
 
-  :root {
-    --pink:        #f472b6;
-    --pink-light:  #fce7f3;
-    --pink-deep:   #be185d;
-    --pink-mid:    #ec4899;
-    --gold:        #c9a96e;
-    --gold-light:  #e8d5a3;
-    --cream:       #fff5fb;
-    --dark:        #1a0814;
-    --blush:       #fda4d0;
-    --accent:      #db2777;
-  }
+/* ============================================================
+   VANDET
+   ============================================================ */
+#ocean{position:fixed;inset:0;overflow:hidden;z-index:0;transition:transform 1.7s cubic-bezier(.5,0,.15,1);transform-origin:50% 70%}
+body.zoom #ocean{transform:scale(1.10)}
 
-  body {
-    background: radial-gradient(ellipse at 60% 30%, #2d0a1e 0%, #1a0814 60%, #0d0408 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    overflow: hidden;
-    cursor: default;
-  }
+#lightrays{
+  position:absolute;inset:-15% -25%;
+  background:
+    linear-gradient(97deg, rgba(255,255,255,.20) 0 2.5%, transparent 2.5% 11%),
+    linear-gradient(85deg, rgba(255,255,255,.15) 0 2%, transparent 2% 13%),
+    linear-gradient(101deg, rgba(189,238,247,.13) 0 4%, transparent 4% 20%),
+    linear-gradient(78deg, rgba(255,255,255,.09) 0 3%, transparent 3% 17%);
+  animation:rays 24s ease-in-out infinite alternate;pointer-events:none;
+  mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.45) 55%, transparent 85%);
+  -webkit-mask-image:linear-gradient(to bottom, #000 0%, rgba(0,0,0,.45) 55%, transparent 85%);
+}
+@keyframes rays{from{transform:translateX(-3%) skewX(-2deg)}to{transform:translateX(3%) skewX(2deg)}}
 
-  #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+#caustics{
+  position:absolute;left:0;right:0;top:0;height:34%;
+  background:
+    radial-gradient(60% 40% at 20% 0%, rgba(255,255,255,.22), transparent 70%),
+    radial-gradient(50% 45% at 62% 0%, rgba(255,255,255,.18), transparent 70%),
+    radial-gradient(40% 35% at 88% 0%, rgba(255,255,255,.14), transparent 70%);
+  animation:caust 13s ease-in-out infinite alternate;pointer-events:none;
+}
+@keyframes caust{from{opacity:.55;transform:translateX(-2%)}to{opacity:1;transform:translateX(2%)}}
 
-  .scene { position: relative; z-index: 1; }
+.bubble{
+  position:absolute;bottom:-8vh;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%, rgba(255,255,255,.9), rgba(255,255,255,.18) 55%, rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.45);pointer-events:none;
+}
+@keyframes rise{
+  0%{transform:translate3d(0,0,0) scale(.7);opacity:0}
+  12%{opacity:.8}
+  100%{transform:translate3d(var(--drift,14px),-115vh,0) scale(1.15);opacity:0}
+}
 
-  .card-wrapper {
-    position: relative;
-    width: min(420px, 92vw);
-    height: min(590px, 88vh);
-    animation: cardReveal 1s cubic-bezier(0.2,0,0.2,1) both;
-  }
+/* ============================================================
+   REVET
+   ============================================================ */
+#reef{
+  position:fixed;left:0;right:0;bottom:0;z-index:1;
+  height:min(30vh,270px);pointer-events:none;
+  transition:transform 1.7s cubic-bezier(.5,0,.15,1);transform-origin:50% 100%;
+}
+body.zoom #reef{transform:scale(1.08)}
+#reef .sandsvg{position:absolute;left:-2%;right:-2%;bottom:0;width:104%;height:100%}
+#reef .item{position:absolute;bottom:0;transform-origin:50% 100%}
+#reef .item svg{display:block;width:100%;height:100%}
+.sway{animation:sway 7s ease-in-out infinite alternate}
+.sway-slow{animation:sway 11s ease-in-out infinite alternate}
+.sway-fast{animation:sway 4.6s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-3.5deg)}to{transform:rotate(3.5deg)}}
 
-  @keyframes cardReveal {
-    from { opacity: 0; transform: translateY(40px) scale(0.95); }
-    to   { opacity: 1; transform: translateY(0)   scale(1); }
-  }
+/* ============================================================
+   SVØMMERE
+   ============================================================ */
+.swimlayer{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+#swimBack{z-index:1}
+#swimFront{z-index:3;transition:opacity 1.1s ease}
+/* når kortet er åbnet, svømmer de bag kortet så teksten kan læses */
+body.opened #swimFront{z-index:1;opacity:.9}
+.swim{position:absolute;left:0;top:0;will-change:transform}
+.bob{animation:bob 5s ease-in-out infinite alternate}
+.bob svg{display:block;width:100%;height:auto}
+@keyframes bob{from{transform:translateY(-9px)}to{transform:translateY(9px)}}
 
-  .card { width: 100%; height: 100%; position: relative; cursor: pointer; }
+/* ============================================================
+   SCENEN — kortet sidder i den øverste del, revet er frit
+   ============================================================ */
+#stage{
+  position:fixed;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  padding:max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left));
+  padding-bottom:min(26vh,235px);
+}
+#zoomer{transform:scale(.66);transition:transform 1.6s cubic-bezier(.42,0,.12,1);will-change:transform}
+body.zoom #zoomer{transform:scale(1)}
 
-  .card-front, .card-back {
-    position: absolute; inset: 0; border-radius: 6px; overflow: hidden;
-    transition: opacity 0.45s ease, transform 0.45s ease;
-    -webkit-transition: opacity 0.45s ease, -webkit-transform 0.45s ease;
-  }
+#book{
+  position:relative;
+  width:min(88vw, 900px);
+  height:min(62vh, 470px);
+  perspective:2200px;perspective-origin:60% 50%;transform-style:preserve-3d;
+}
 
-  .card-front { opacity: 1; transform: scale(1);    pointer-events: auto;  z-index: 2; }
-  .card-back  { opacity: 0; transform: scale(0.96); pointer-events: none;  z-index: 1; }
-  .card.flipped .card-front { opacity: 0; transform: scale(0.96); pointer-events: none; }
-  .card.flipped .card-back  { opacity: 1; transform: scale(1);    pointer-events: auto; }
+/* ---------- FORSIDEN (uden tekst) ---------- */
+#cover{
+  position:absolute;inset:0;z-index:5;
+  transform-origin:left center;transform-style:preserve-3d;
+  transition:transform 1.6s cubic-bezier(.62,.02,.2,1), opacity .45s 1.15s linear;
+  cursor:pointer;animation:float 7s ease-in-out infinite;
+}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -12px}}
+.cover-face{
+  position:absolute;inset:0;border-radius:16px;overflow:hidden;backface-visibility:hidden;
+  box-shadow:0 34px 74px -16px var(--shadow), 0 3px 0 rgba(255,255,255,.16) inset;
+  background:radial-gradient(118% 82% at 50% 0%, #12719c 0%, #08496b 44%, #05304c 100%);
+}
+.cover-face::after{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.11) 1px, transparent 1px);
+  background-size:16px 16px;opacity:.55;
+}
+.cover-back{
+  position:absolute;inset:0;border-radius:16px;transform:rotateY(180deg);backface-visibility:hidden;
+  background:linear-gradient(150deg,var(--paper) 0%, var(--paper2) 100%);
+  box-shadow:0 24px 50px -20px var(--shadow);
+}
+.cover-frame{
+  position:absolute;inset:13px;border-radius:10px;
+  border:1.5px solid rgba(232,198,106,.45);
+  box-shadow:0 0 0 6px rgba(232,198,106,.10) inset;pointer-events:none;
+}
+.cover-art{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:16px}
+.cover-art .art{position:absolute}
+.cover-art .art svg{display:block;width:100%;height:100%}
+.tint-cool{color:rgba(189,238,247,.26)}
 
-  /* ── FRONT ── */
-  .card-front {
-    background: linear-gradient(160deg, #fff5fb 0%, #fce7f3 50%, #fdf2f8 100%);
-    border: 1.5px solid var(--pink);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: space-between;
-    padding: 36px 28px 28px;
-    box-shadow:
-      0 0 0 4px rgba(244,114,182,0.08),
-      0 0 60px rgba(244,114,182,0.25),
-      0 20px 60px rgba(0,0,0,0.6);
-  }
+/* ---------- SEGLET ---------- */
+#sealWrap{
+  position:absolute;left:50%;top:50%;translate:-50% -50%;
+  width:clamp(130px,20vmin,180px);aspect-ratio:1;
+  display:grid;place-items:center;z-index:6;touch-action:none;
+}
+#sealRing{position:absolute;inset:0;transform:rotate(-90deg)}
+#sealRing circle{fill:none;stroke-linecap:round}
+#ringTrack{stroke:rgba(232,198,106,.24);stroke-width:3}
+#ringFill{stroke:var(--gold-light);stroke-width:4.5;filter:drop-shadow(0 0 7px rgba(232,198,106,.6))}
+#seal{
+  width:74%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 34% 28%, #d8543f 0%, var(--wax) 46%, var(--wax-dark) 100%);
+  box-shadow:0 10px 26px -6px rgba(0,0,0,.6), 0 2px 0 rgba(255,255,255,.24) inset, 0 -6px 14px rgba(0,0,0,.3) inset;
+  display:grid;place-items:center;color:rgba(255,228,218,.92);position:relative;
+  transition:transform .18s ease, filter .5s ease, opacity .5s ease;
+}
+#seal::before{
+  content:"";position:absolute;inset:-7%;border-radius:47% 53% 51% 49% / 52% 48% 53% 47%;
+  background:radial-gradient(circle at 40% 35%, rgba(203,78,60,.95), rgba(141,36,25,.95));z-index:-1;
+}
+#seal svg{width:58%;height:58%;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
+#sealWrap.holding #seal{transform:scale(.94)}
+#sealWrap.nudge{animation:nudge .45s ease}
+@keyframes nudge{0%,100%{translate:-50% -50%}25%{translate:calc(-50% - 7px) -50%}75%{translate:calc(-50% + 7px) -50%}}
+#sealWrap.melt #seal{transform:scale(1.8);filter:blur(10px);opacity:0}
+#sealWrap.melt #sealRing{opacity:0;transition:opacity .4s}
 
-  /* Pink shimmer border layer */
-  .card-front::before {
-    content: '';
-    position: absolute; inset: 8px;
-    border: 1px solid rgba(244,114,182,0.35);
-    border-radius: 4px;
-    pointer-events: none;
-  }
-  /* Extra glow layer */
-  .card-front::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(244,114,182,0.15) 0%, transparent 65%);
-    pointer-events: none;
-  }
+/* forsidehint – i vandet under kortet */
+#hint{
+  position:fixed;left:50%;translate:-50% 0;bottom:clamp(100px,31vh,260px);
+  font-family:'Caveat',cursive;font-size:clamp(18px,2.6vmin,25px);
+  color:rgba(255,255,255,.94);letter-spacing:.3px;white-space:nowrap;
+  opacity:0;visibility:hidden;transition:opacity .8s ease;pointer-events:none;
+  text-shadow:0 2px 12px rgba(2,40,60,.7);z-index:4;
+}
+#hint.show{opacity:1;visibility:visible;animation:breathe 3.2s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
+body.opened #hint{opacity:0 !important;visibility:hidden !important;animation:none !important}
 
-  .corner-ornament {
-    position: absolute; font-size: 18px;
-    color: var(--pink); opacity: 0.8;
-  }
-  .corner-ornament.tl { top: 14px; left: 14px; }
-  .corner-ornament.tr { top: 14px; right: 14px; }
-  .corner-ornament.bl { bottom: 14px; left: 14px; }
-  .corner-ornament.br { bottom: 14px; right: 14px; }
+/* ============================================================
+   KORTETS INDERSIDE
+   ============================================================ */
+#inside{
+  position:absolute;inset:0;z-index:2;border-radius:16px;overflow:hidden;
+  background:linear-gradient(155deg,var(--paper) 0%, var(--paper2) 55%, #f0e3c9 100%);
+  box-shadow:0 30px 70px -20px var(--shadow), 0 0 0 1px rgba(200,151,63,.25);
+  display:grid;grid-template-columns:1.1fr .9fr;
+  opacity:0;transform:scale(.985);
+  transition:opacity .5s .35s ease, transform .8s .35s cubic-bezier(.2,.9,.3,1);
+}
+#book.open #inside{opacity:1;transform:scale(1)}
+#book.open #cover{transform:rotateY(-168deg);opacity:0;pointer-events:none;animation:none}
+#inside::before{
+  content:"";position:absolute;left:calc(55% - 1px);top:5%;bottom:5%;width:2px;
+  background:linear-gradient(to bottom,transparent,rgba(200,151,63,.35),transparent);
+  z-index:3;pointer-events:none;
+}
+.page{position:relative;padding:clamp(18px,3vmin,34px);display:flex;flex-direction:column;min-height:0}
+.page-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.page-deco .art{position:absolute}
+.page-deco .art svg{display:block;width:100%;height:100%}
+.tint-sea{color:rgba(13,126,163,.13)}
+.tint-sand{color:rgba(200,151,63,.20)}
 
-  .brand-tag {
-    font-family: 'Playfair Display', serif;
-    font-size: 10px; letter-spacing: 0.35em;
-    color: var(--pink-deep); text-transform: uppercase; opacity: 0.85;
-    position: relative; z-index: 1;
-  }
+/* ---------- HILSEN ---------- */
+#left{justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.crest{display:flex;align-items:center;gap:10px;color:var(--gold);margin-bottom:clamp(4px,1vmin,10px)}
+.crest .line{height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(200,151,63,.55),transparent)}
+.crest svg{width:clamp(22px,3vmin,32px);height:clamp(22px,3vmin,32px)}
+h1{
+  font-family:'Playfair Display',Georgia,serif;font-weight:600;
+  font-size:clamp(24px,4.6vmin,40px);line-height:1.06;margin:0 0 .3em;
+  color:var(--deep2);letter-spacing:.3px;
+}
+h1 .navn{display:block;color:var(--sea);font-style:italic}
+.greet p{margin:0 0 .7em;font-size:clamp(13.5px,2vmin,17.5px);line-height:1.58;color:var(--ink)}
+.greet p:last-child{margin-bottom:0}
+.sign{margin-top:clamp(8px,1.8vmin,18px);font-family:'Caveat',cursive;font-size:clamp(20px,3.2vmin,29px);line-height:1.15;color:var(--sea)}
+.sign small{display:block;font-family:'Lora',serif;font-size:clamp(10px,1.35vmin,12px);color:var(--ink-soft);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em}
 
-  /* Cat illustration */
-  .illustration {
-    position: relative;
-    width: min(210px, 50vw); height: min(210px, 50vw);
-    animation: float 4s ease-in-out infinite;
-    filter: drop-shadow(0 6px 18px rgba(244,114,182,0.35));
-  }
+/* ---------- KOØJET PÅ HØJRE SIDE ---------- */
+#right{align-items:center;justify-content:center}
+.porthole{
+  position:relative;width:min(88%, 40vmin);aspect-ratio:1;border-radius:50%;
+  padding:clamp(8px,1.4vmin,14px);
+  background:linear-gradient(155deg,#f2d68c 0%, #c8973f 46%, #9c7020 100%);
+  box-shadow:0 16px 32px -14px rgba(2,26,44,.55), 0 2px 0 rgba(255,255,255,.5) inset;
+}
+.ph-glass{
+  position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;
+  background:linear-gradient(180deg,#a6e7f4 0%, #55b9d1 55%, #2d8dab 100%);
+  box-shadow:0 0 0 3px rgba(255,255,255,.35) inset, 0 14px 28px rgba(2,26,44,.35) inset;
+}
+.ph-sand{position:absolute;left:-8%;right:-8%;bottom:-8%;height:28%;border-radius:50% 50% 0 0;background:linear-gradient(180deg,#f0dcb0,#d9be8a)}
+.ph-item{position:absolute}
+.ph-item svg{display:block;width:100%;height:100%}
+.ph-shine{position:absolute;inset:0;pointer-events:none;background:linear-gradient(142deg, rgba(255,255,255,.42) 0 16%, rgba(255,255,255,.10) 24%, transparent 38%)}
+.ph-bolts{position:absolute;inset:0;pointer-events:none}
+.bolt{position:absolute;width:clamp(5px,.9vmin,9px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 30%, #fff2c8, #9c7020);transform:translate(-50%,-50%)}
+.ph-bub{position:absolute;border-radius:50%;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.8)}
+@keyframes phrise{0%{transform:translateY(0);opacity:0}20%{opacity:.9}100%{transform:translateY(-190px);opacity:0}}
 
-  @keyframes float {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-9px); }
-  }
+/* ============================================================
+   SKATTEKISTEN — uden for kortet, nede på havbunden
+   ============================================================ */
+#chest{
+  position:fixed;left:50%;z-index:5;
+  bottom:calc(max(8px, env(safe-area-inset-bottom)) + 3vh);
+  width:clamp(122px,20vmin,215px);aspect-ratio:120/104;
+  border:0;background:none;padding:0;cursor:pointer;
+  transform:translateX(-50%);
+  opacity:0;pointer-events:none;
+}
+#chest.live{opacity:1}
+#chest.ready{pointer-events:auto}
+#chest.flying{animation:chestX 1.55s cubic-bezier(.12,.5,.35,1) forwards}
+#chestInner{position:absolute;inset:0;transform-origin:50% 100%;perspective:900px}
+#chestInner.falling{animation:chestY 1.55s linear forwards}
+#chestInner.idle{animation:chestIdle 3.6s ease-in-out infinite}
+@keyframes chestX{
+  0%  {transform:translateX(calc(-50% + var(--sx,0px))) scale(.30)}
+  100%{transform:translateX(-50%) scale(1)}
+}
+@keyframes chestY{
+  0%  {transform:translateY(var(--sy,-320px));animation-timing-function:ease-out}
+  12% {transform:translateY(calc(var(--sy,-320px) - 46px));animation-timing-function:cubic-bezier(.42,0,.9,.5)}
+  52% {transform:translateY(0) scale(1)}
+  58% {transform:translateY(0) scaleX(1.14) scaleY(.82)}
+  70% {transform:translateY(-30%) scale(1)}
+  80% {transform:translateY(0) scaleX(1.07) scaleY(.90)}
+  89% {transform:translateY(-11%) scale(1)}
+  95% {transform:translateY(0) scaleX(1.03) scaleY(.96)}
+  100%{transform:translateY(0) scale(1)}
+}
+@keyframes chestIdle{
+  0%,74%,100%{transform:translateY(0) rotate(0)}
+  80%{transform:translateY(-7px) rotate(-2.5deg)}
+  86%{transform:translateY(-2px) rotate(2.5deg)}
+  92%{transform:translateY(0) rotate(-1deg)}
+}
+.chest-body{position:absolute;left:0;right:0;bottom:0;height:67.3%;z-index:2;filter:drop-shadow(0 10px 14px rgba(2,26,44,.45))}
+.chest-lid{position:absolute;left:0;right:0;top:0;height:44.2%;z-index:3;transform-origin:50% 100%;transform-style:preserve-3d;transition:transform 1.05s cubic-bezier(.32,-.3,.35,1.35)}
+.lid-face{position:absolute;inset:0;transition:opacity .24s .30s}
+.lid-in{opacity:0}
+#chest.opened .lid-out{opacity:0}
+#chest.opened .lid-in{opacity:1}
+.lid-face svg{display:block;width:100%;height:100%}
+.chest-mouth{position:absolute;left:0;right:0;bottom:0;height:67.3%;z-index:3;opacity:0;transition:opacity .45s .3s}
+.chest-mouth svg{display:block;width:100%;height:100%}
+#chest.opened .chest-mouth{opacity:1}
+#chest.lidback .chest-lid{z-index:1}
+.chest-body svg,.chest-lid svg{display:block;width:100%;height:100%}
+#chest.opened .chest-lid{transform:translateY(-16.5%) rotateX(12deg) scaleX(1.04)}
+.chest-glow{
+  position:absolute;left:20%;right:20%;top:31%;height:16%;border-radius:50%;z-index:4;filter:blur(3px);
+  background:radial-gradient(ellipse at center, rgba(255,222,140,.85), rgba(255,214,110,.30) 48%, rgba(255,205,90,0) 78%);
+  opacity:0;transition:opacity .5s .35s;
+}
+#chest.opened .chest-glow{opacity:1;animation:glowpulse 2.6s ease-in-out infinite}
+@keyframes glowpulse{0%,100%{opacity:.7}50%{opacity:1}}
+.sandpuff{
+  position:absolute;left:50%;bottom:-14%;translate:-50% 0;width:190%;height:44%;
+  border-radius:50%;pointer-events:none;z-index:4;opacity:0;
+  background:radial-gradient(ellipse at center, rgba(239,220,178,.95), rgba(224,200,150,.35) 55%, rgba(224,200,150,0) 75%);
+}
+.sandpuff.go{animation:puff 1s ease-out forwards}
+@keyframes puff{0%{opacity:0;transform:translateX(-50%) scale(.25)}18%{opacity:.95}100%{opacity:0;transform:translateX(-50%) scale(1.6)}}
+.coin{position:absolute;z-index:5;border-radius:50%;background:linear-gradient(150deg,#ffe89a,#d8a63c);box-shadow:0 1px 3px rgba(0,0,0,.35);opacity:0;pointer-events:none}
+@keyframes coinfly{
+  0%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(.6)}
+  100%{opacity:0;transform:translate3d(var(--cx),var(--cy),0) rotate(var(--cr)) scale(1)}
+}
 
-  .cat-svg { width: 100%; height: 100%; }
+#burst{position:fixed;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.conf{position:absolute;width:9px;height:14px;border-radius:2px;opacity:0}
+@keyframes fly{0%{transform:translate3d(0,0,0) rotate(0);opacity:1}100%{transform:translate3d(var(--x),var(--y),0) rotate(var(--r));opacity:0}}
 
-  .bag-charm {
-    position: absolute; bottom: -8px; right: -8px;
-    width: 66px; height: 66px;
-    animation: float 4s ease-in-out infinite 0.6s;
-    filter: drop-shadow(0 4px 10px rgba(219,39,119,0.4));
-  }
+/* ============================================================
+   OVERLAYS
+   ============================================================ */
+.overlay{
+  position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  padding:max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  background:rgba(3,44,67,.6);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
+  opacity:0;visibility:hidden;transition:opacity .35s ease, visibility .35s;
+}
+.overlay.show{opacity:1;visibility:visible}
+.sheet{
+  width:min(560px,100%);max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:linear-gradient(155deg,var(--paper) 0%, var(--paper2) 100%);
+  border-radius:16px;padding:clamp(18px,3.4vmin,34px);
+  box-shadow:0 30px 60px -18px rgba(2,26,44,.65), 0 0 0 1px rgba(200,151,63,.35);
+  transform:translateY(14px) scale(.97);transition:transform .45s cubic-bezier(.2,.9,.3,1);text-align:center;
+}
+.overlay.show .sheet{transform:none}
+.sheet.shake{animation:shake .5s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.q-top{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:clamp(8px,1.6vmin,16px)}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(13,126,163,.22);transition:background .3s,transform .3s}
+.dot.done{background:var(--gold);transform:scale(1.15)}
+.dot.now{background:var(--sea)}
+.q-text{font-family:'Playfair Display',Georgia,serif;font-size:clamp(17px,2.7vmin,25px);line-height:1.3;color:var(--deep2);margin:0 0 clamp(12px,2.2vmin,22px)}
+.opts{display:grid;gap:9px}
+.opt{
+  font-family:'Lora',serif;font-size:clamp(14px,1.95vmin,17px);text-align:left;
+  padding:clamp(12px,1.9vmin,17px) 16px;border-radius:11px;
+  border:1.5px solid rgba(13,126,163,.28);background:rgba(255,255,255,.62);color:var(--ink);
+  cursor:pointer;transition:transform .12s, background .2s, border-color .2s;line-height:1.35;
+}
+.opt:active{transform:scale(.985)}
+.opt.wrong{border-color:rgba(226,112,90,.75);background:rgba(226,112,90,.12);color:#b8452f}
+.opt.right{border-color:var(--gold);background:rgba(200,151,63,.16)}
+.hint-line{min-height:1.4em;margin-top:clamp(10px,1.8vmin,16px);font-family:'Caveat',cursive;font-size:clamp(16px,2.3vmin,21px);color:#b8452f;opacity:0;transition:opacity .3s}
+.hint-line.show{opacity:1}
+.q-foot{margin-top:clamp(10px,1.8vmin,16px);font-size:clamp(11px,1.5vmin,13px);color:var(--ink-soft)}
+.linkish{background:none;border:0;color:var(--sea);text-decoration:underline;cursor:pointer;font:inherit;padding:4px}
 
-  /* Autonomous sparkles on front */
-  .auto-sparkle {
-    position: absolute;
-    pointer-events: none;
-    font-size: 14px;
-    animation: sparklePop 1.8s ease-out forwards;
-    z-index: 3;
-  }
-  @keyframes sparklePop {
-    0%   { opacity: 0;   transform: scale(0) rotate(0deg); }
-    30%  { opacity: 1;   transform: scale(1.3) rotate(20deg); }
-    100% { opacity: 0;   transform: scale(0.4) rotate(-10deg) translateY(-22px); }
-  }
+#voucherOverlay .sheet{width:min(620px,100%);padding:0;overflow:hidden;background:none;box-shadow:none}
+.voucher{
+  position:relative;background:linear-gradient(155deg,#fefaf1 0%, var(--paper2) 60%, #f0e2c6 100%);
+  border-radius:16px;padding:clamp(20px,3.6vmin,38px) clamp(18px,3.4vmin,36px);
+  box-shadow:0 30px 60px -18px rgba(2,26,44,.7);
+  transform:scale(.8) rotate(-3deg);opacity:0;
+  transition:transform .8s cubic-bezier(.18,1.1,.35,1), opacity .5s;
+}
+#voucherOverlay.show .voucher{transform:none;opacity:1}
+.voucher::before{content:"";position:absolute;inset:9px;border-radius:9px;border:1.5px solid rgba(200,151,63,.55);box-shadow:0 0 0 4px rgba(200,151,63,.12) inset;pointer-events:none}
+.v-crest{color:var(--gold);display:flex;justify-content:center;margin-bottom:6px}
+.v-crest svg{width:clamp(34px,5vmin,50px);height:clamp(34px,5vmin,50px)}
+.v-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(19px,3.1vmin,29px);letter-spacing:.22em;text-transform:uppercase;color:var(--deep2);margin:0 0 4px}
+.v-sub{font-size:clamp(11px,1.55vmin,13px);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:clamp(14px,2.4vmin,24px)}
+.v-items{display:grid;gap:clamp(9px,1.6vmin,14px);text-align:left}
+.v-item{display:flex;gap:clamp(11px,1.9vmin,17px);align-items:center;background:rgba(255,255,255,.62);border:1px solid rgba(200,151,63,.32);border-radius:12px;padding:clamp(12px,2vmin,18px)}
+.v-ic{flex:0 0 auto;width:clamp(38px,5.6vmin,54px);height:clamp(38px,5.6vmin,54px);border-radius:50%;display:grid;place-items:center;color:var(--paper);background:linear-gradient(150deg,var(--sea) 0%, var(--deep2) 100%);box-shadow:0 5px 12px -4px rgba(2,26,44,.45)}
+.v-ic svg{width:56%;height:56%}
+.v-h{font-family:'Playfair Display',serif;font-size:clamp(15.5px,2.3vmin,21px);color:var(--deep2);line-height:1.2}
+.v-p{font-size:clamp(12px,1.7vmin,14.5px);color:var(--ink-soft);margin-top:3px;line-height:1.35}
+.v-foot{margin-top:clamp(14px,2.4vmin,24px);padding-top:clamp(11px,1.9vmin,18px);border-top:1px dashed rgba(200,151,63,.5);display:flex;justify-content:space-between;gap:14px;align-items:flex-end}
+.v-to{text-align:left;font-size:clamp(10px,1.4vmin,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);min-width:0}
+.v-to b{display:block;font-family:'Caveat',cursive;font-size:clamp(19px,2.7vmin,26px);letter-spacing:0;text-transform:none;color:var(--sea);font-weight:700;line-height:1.15}
+.closebar{margin-top:clamp(12px,2vmin,20px);display:flex;justify-content:center}
+.btn{font-family:'Lora',serif;font-size:clamp(13px,1.8vmin,15px);padding:11px 26px;border-radius:999px;cursor:pointer;border:1.5px solid rgba(253,247,234,.6);background:rgba(253,247,234,.14);color:var(--paper);transition:background .2s, transform .12s}
+.btn:active{transform:scale(.97)}
 
-  .front-title { text-align: center; position: relative; z-index: 1; }
+#sound{
+  position:fixed;z-index:70;top:max(12px, env(safe-area-inset-top));right:max(12px, env(safe-area-inset-right));
+  width:42px;height:42px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  border:1px solid rgba(255,255,255,.45);background:rgba(3,44,67,.32);color:rgba(255,255,255,.92);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+#sound svg{width:20px;height:20px}
+#sound:active{transform:scale(.94)}
 
-  .front-title .year {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px; letter-spacing: 0.3em;
-    color: var(--pink-deep); text-transform: uppercase;
-    display: block; margin-bottom: 6px;
-  }
-
-  .front-title h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(26px, 7vw, 32px); font-weight: 700;
-    color: var(--pink-deep); line-height: 1.1;
-  }
-
-  .front-title h1 em { font-style: italic; color: var(--accent); }
-
-  .click-hint {
-    font-size: 11px; letter-spacing: 0.2em;
-    color: var(--pink); opacity: 0.7; text-transform: uppercase;
-    animation: pulse 2s ease-in-out infinite;
-    position: relative; z-index: 1;
-  }
-
-  @keyframes pulse { 0%,100% { opacity: 0.35; } 50% { opacity: 1; } }
-
-  /* Glitter dots */
-  .card-front .glitter {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    animation: glitter 1.2s ease-out forwards;
-    opacity: 0; z-index: 5;
-  }
-  @keyframes glitter {
-    0%   { opacity: 1; transform: scale(0); }
-    40%  { opacity: 0.9; transform: scale(1.8); }
-    100% { opacity: 0; transform: scale(0.3) translateY(-18px); }
-  }
-
-  /* ── BACK ── */
-  .card-back {
-    background: linear-gradient(145deg, #3d0a28 0%, #1f0616 60%, #2d0a1e 100%);
-    display: flex; flex-direction: column;
-    padding: clamp(30px,6vw,48px) clamp(24px,6vw,38px) clamp(22px,5vw,36px);
-    box-shadow: 0 0 60px rgba(244,114,182,0.2), 0 20px 60px rgba(0,0,0,0.7);
-    position: relative; overflow: hidden;
-  }
-
-  .card-back::before {
-    content: '';
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at 15% 15%, rgba(244,114,182,0.12) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 85%, rgba(201,169,110,0.08) 0%, transparent 55%);
-    pointer-events: none;
-  }
-
-  .back-ornament {
-    position: absolute; top: 0; left: 0; right: 0; height: 5px;
-    background: linear-gradient(90deg, transparent, var(--pink), var(--blush), var(--pink), transparent);
-  }
-  .back-ornament-bottom {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 5px;
-    background: linear-gradient(90deg, transparent, var(--pink), var(--blush), var(--pink), transparent);
-  }
-
-  .back-label {
-    font-size: 10px; letter-spacing: 0.4em;
-    color: var(--blush); opacity: 0.65;
-    text-transform: uppercase; margin-bottom: 22px;
-    position: relative; z-index: 1;
-  }
-
-  .back-message {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(13px,3.5vw,15px); line-height: 1.95;
-    color: var(--pink-light); font-style: italic;
-    position: relative; z-index: 1; flex: 1;
-  }
-
-  .back-message .highlight {
-    color: var(--blush); font-style: normal; font-weight: 600;
-  }
-
-  .age-reveal {
-    margin-top: 24px; position: relative; z-index: 1; text-align: center;
-  }
-
-  .age-counter-area { cursor: pointer; transition: transform 0.2s; }
-  .age-counter-area:active { transform: scale(0.96); }
-
-  .age-reveal .number {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(52px,15vw,72px); font-weight: 700;
-    color: var(--pink); line-height: 1; display: block;
-    text-shadow: 0 0 30px rgba(244,114,182,0.6), 0 0 60px rgba(244,114,182,0.3);
-  }
-
-  .age-reveal .number-label {
-    font-size: 11px; letter-spacing: 0.35em;
-    color: var(--blush); opacity: 0.75;
-    text-transform: uppercase; margin-top: 4px; display: block;
-  }
-
-  .tap-hint {
-    font-size: 10px; letter-spacing: 0.2em;
-    color: var(--blush); opacity: 0.5; text-transform: uppercase;
-    text-align: center; margin-top: 6px; display: block;
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  .back-signature {
-    margin-top: 20px; position: relative; z-index: 1;
-    text-align: right; font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-size: 14px; color: var(--blush); opacity: 0.85;
-    border-top: 1px solid rgba(244,114,182,0.2); padding-top: 14px;
-  }
-
-  /* Confetti */
-  .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
-  .confetti-piece {
-    position: absolute; opacity: 0;
-    animation: confettiFall 2.5s ease-in forwards;
-  }
-  @keyframes confettiFall {
-    0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
-    100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
-  }
-
-  /* Paw trail */
-  .paw {
-    position: fixed; pointer-events: none; font-size: 18px;
-    opacity: 0; z-index: 200;
-    animation: pawFade 0.8s ease-out forwards;
-    transform: translate(-50%,-50%);
-  }
-  @keyframes pawFade {
-    0%   { opacity: 0.85; transform: translate(-50%,-50%) scale(1.2); }
-    100% { opacity: 0;    transform: translate(-50%,-50%) scale(0.4) translateY(-20px); }
-  }
+/* ============================================================
+   PORTRÆT / TELEFON
+   ============================================================ */
+@media (orientation:portrait){
+  #stage{padding-bottom:min(23vh,210px)}
+  #book{width:min(94vw,600px);height:min(56vh,520px)}
+  #zoomer{transform:scale(.68)}
+  #cover{transform-origin:center top}
+  #book.open #cover{transform:rotateX(166deg)}
+  #inside{grid-template-columns:1fr}
+  #inside::before{display:none}
+  #right{display:none}
+  h1{font-size:clamp(26px,6.4vw,38px)}
+  .greet p{font-size:clamp(14.5px,3.4vw,17px)}
+  .sign{font-size:clamp(21px,5.4vw,29px)}
+  #reef{height:min(24vh,215px)}
+  #chest{width:clamp(120px,32vw,200px)}
+  .v-foot{flex-direction:column;align-items:flex-start;gap:8px}
+  .v-foot .v-to:last-child{text-align:left !important}
+}
+@media (orientation:portrait) and (max-height:740px){
+  #stage{padding-bottom:min(21vh,170px)}
+  #book{height:min(52vh,440px)}
+  .page{padding:clamp(16px,4vw,24px)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s !important;animation-iteration-count:1 !important}
+  #cover{transition:opacity .4s}
+  #book.open #cover{transform:none}
+}
 </style>
 </head>
 <body>
 
-<canvas id="particles"></canvas>
-<div class="confetti-container" id="confettiContainer"></div>
+<!-- ============================================================
+     FIGURBIBLIOTEK
+     Hvert dyr er tegnet vendt til ÉN side. FACE-tabellen i
+     scriptet ved hvilken, så intet dyr svømmer baglæns.
+     ============================================================ -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <defs>
+    <radialGradient id="g-inside" cx="50%" cy="92%" r="78%">
+      <stop offset="0" stop-color="#ffd77a"/><stop offset=".28" stop-color="#c98b23"/>
+      <stop offset=".62" stop-color="#6b3f12"/><stop offset="1" stop-color="#1c0e04"/>
+    </radialGradient>
+    <radialGradient id="g-lidlight" cx="50%" cy="104%" r="78%">
+      <stop offset="0" stop-color="#ffd77a" stop-opacity=".8"/>
+      <stop offset=".55" stop-color="#ffd77a" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#ffd77a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="g-sand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4e3bd"/><stop offset="1" stop-color="#d8bb87"/>
+    </linearGradient>
 
-<div class="scene">
-  <div class="card-wrapper">
-    <div class="card" id="card">
+    <!-- SØHEST (vender mod HØJRE) -->
+    <symbol id="i-seahorse" viewBox="0 0 100 110">
+      <g fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M79 27C75 24 69 22 63 23 49 19 36 27 38 41 40 53 50 57 46 69 43 79 30 81 32 91c1 6 10 7 13 1"/>
+        <path d="M40 44c-8 4-9 12-2 16" stroke-width="9"/>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"><path d="M50 20l2-9M58 18l5-8M43 24l-2-9"/></g>
+      <circle cx="60" cy="29" r="3" fill="#04263c" opacity=".5"/>
+    </symbol>
+    <symbol id="c-seahorse" viewBox="0 0 100 110">
+      <g fill="none" stroke="#f0a63c" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M79 27C75 24 69 22 63 23 49 19 36 27 38 41 40 53 50 57 46 69 43 79 30 81 32 91c1 6 10 7 13 1"/>
+      </g>
+      <path d="M40 44c-8 4-9 12-2 16" fill="none" stroke="#f7c46b" stroke-width="7" stroke-linecap="round"/>
+      <g fill="none" stroke="#f7c46b" stroke-width="5" stroke-linecap="round"><path d="M50 20l2-9M58 18l5-8M43 24l-2-9"/></g>
+      <circle cx="60" cy="29" r="3.4" fill="#3b2308"/>
+    </symbol>
 
-      <!-- FRONT -->
-      <div class="card-front" id="cardFront">
-        <span class="corner-ornament tl">✦</span>
-        <span class="corner-ornament tr">✦</span>
-        <span class="corner-ornament bl">✦</span>
-        <span class="corner-ornament br">✦</span>
+    <!-- GRAVHUND (vender mod VENSTRE) -->
+    <symbol id="i-dachs" viewBox="0 0 132 60">
+      <g fill="currentColor">
+        <rect x="26" y="17" width="76" height="23" rx="11.5"/>
+        <circle cx="24" cy="18" r="11.5"/>
+        <rect x="2" y="15" width="24" height="10" rx="5"/>
+        <ellipse cx="29" cy="19" rx="6" ry="10.5"/>
+        <rect x="31" y="35" width="7.5" height="17" rx="3.75"/>
+        <rect x="45" y="35" width="7.5" height="17" rx="3.75"/>
+        <rect x="76" y="35" width="7.5" height="17" rx="3.75"/>
+        <rect x="90" y="35" width="7.5" height="17" rx="3.75"/>
+      </g>
+      <path d="M100 21c11-3 16-9 17-18" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round"/>
+      <circle cx="17" cy="14" r="2" fill="#04263c" opacity=".5"/>
+    </symbol>
+    <symbol id="c-dachs" viewBox="0 0 140 74">
+      <g fill="#a4682f">
+        <rect x="30" y="28" width="76" height="24" rx="12"/>
+        <circle cx="28" cy="30" r="12"/>
+        <rect x="5" y="27" width="24" height="10" rx="5"/>
+        <rect x="35" y="47" width="8" height="18" rx="4"/>
+        <rect x="49" y="47" width="8" height="18" rx="4"/>
+        <rect x="80" y="47" width="8" height="18" rx="4"/>
+        <rect x="94" y="47" width="8" height="18" rx="4"/>
+      </g>
+      <ellipse cx="34" cy="31" rx="6.5" ry="11.5" fill="#7c4a1d"/>
+      <path d="M104 33c11-3 17-10 18-20" fill="none" stroke="#a4682f" stroke-width="7" stroke-linecap="round"/>
+      <path d="M27 20V6h11" fill="none" stroke="#e2705a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse cx="24" cy="27" rx="12" ry="8" fill="#bdeef7" opacity=".75"/>
+      <circle cx="20" cy="26" r="2.4" fill="#2a1a08"/>
+      <circle cx="6" cy="31" r="3.4" fill="#2a1a08"/>
+    </symbol>
 
-        <div class="brand-tag">Une édition spéciale · 1993</div>
+    <!-- DYKKER, LODRET (til forsidens udsmykning) -->
+    <symbol id="i-diver" viewBox="0 0 110 130">
+      <g fill="currentColor">
+        <rect x="60" y="34" width="13" height="28" rx="6.5"/>
+        <circle cx="46" cy="24" r="13"/>
+        <rect x="36" y="36" width="26" height="36" rx="12"/>
+        <ellipse cx="24" cy="106" rx="12" ry="7" transform="rotate(-18 24 106)"/>
+        <ellipse cx="47" cy="112" rx="12" ry="7" transform="rotate(-8 47 112)"/>
+      </g>
+      <g fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round">
+        <path d="M40 70l-8 30M56 70l-4 34M38 46L20 58M60 46l14 6"/>
+      </g>
+      <ellipse cx="42" cy="21" rx="10" ry="7" fill="#bdeef7" opacity=".55"/>
+      <g fill="none" stroke="currentColor" stroke-width="3" opacity=".7">
+        <circle cx="78" cy="26" r="5"/><circle cx="88" cy="12" r="3.5"/><circle cx="72" cy="6" r="2.5"/>
+      </g>
+    </symbol>
 
-        <div class="illustration">
-          <svg class="cat-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <!-- Glow base -->
-            <ellipse cx="100" cy="148" rx="54" ry="30" fill="#f472b6" opacity="0.08"/>
-            <!-- Tail -->
-            <path d="M148 155 Q178 128 168 104 Q160 86 150 100" stroke="#be185d" stroke-width="6" fill="none" stroke-linecap="round"/>
-            <!-- Body -->
-            <ellipse cx="100" cy="140" rx="48" ry="38" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2"/>
-            <!-- Head -->
-            <ellipse cx="100" cy="88" rx="38" ry="36" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2"/>
-            <!-- Ear left -->
-            <polygon points="68,68 58,40 82,62" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2" stroke-linejoin="round"/>
-            <polygon points="70,66 64,49 79,63" fill="#fce7f3" opacity="0.9"/>
-            <!-- Ear right -->
-            <polygon points="132,68 142,40 118,62" fill="#fff5fb" stroke="#f472b6" stroke-width="1.2" stroke-linejoin="round"/>
-            <polygon points="130,66 136,49 121,63" fill="#fce7f3" opacity="0.9"/>
-            <!-- Eyes -->
-            <ellipse cx="86" cy="86" rx="7" ry="8" fill="#1a0814"/>
-            <ellipse cx="114" cy="86" rx="7" ry="8" fill="#1a0814"/>
-            <circle cx="88" cy="84" r="2.2" fill="white"/>
-            <circle cx="116" cy="84" r="2.2" fill="white"/>
-            <ellipse cx="86" cy="87" rx="4" ry="5" fill="#db2777" opacity="0.55"/>
-            <ellipse cx="114" cy="87" rx="4" ry="5" fill="#db2777" opacity="0.55"/>
-            <!-- Nose -->
-            <polygon points="100,96 97,100 103,100" fill="#fda4d0"/>
-            <!-- Mouth -->
-            <path d="M97,100 Q100,105 103,100" stroke="#be185d" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <!-- Whiskers -->
-            <line x1="82" y1="98" x2="54" y2="93" stroke="#be185d" stroke-width="1" opacity="0.45"/>
-            <line x1="82" y1="101" x2="54" y2="101" stroke="#be185d" stroke-width="1" opacity="0.45"/>
-            <line x1="82" y1="104" x2="54" y2="109" stroke="#be185d" stroke-width="1" opacity="0.45"/>
-            <line x1="118" y1="98" x2="146" y2="93" stroke="#be185d" stroke-width="1" opacity="0.45"/>
-            <line x1="118" y1="101" x2="146" y2="101" stroke="#be185d" stroke-width="1" opacity="0.45"/>
-            <line x1="118" y1="104" x2="146" y2="109" stroke="#be185d" stroke-width="1" opacity="0.45"/>
-            <!-- Chest fluff -->
-            <ellipse cx="100" cy="118" rx="18" ry="12" fill="white" opacity="0.6"/>
-            <!-- Legs -->
-            <ellipse cx="80" cy="175" rx="14" ry="10" fill="#fff5fb" stroke="#f472b6" stroke-width="1"/>
-            <ellipse cx="120" cy="175" rx="14" ry="10" fill="#fff5fb" stroke="#f472b6" stroke-width="1"/>
-            <line x1="74" y1="178" x2="74" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
-            <line x1="80" y1="179" x2="80" y2="184" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
-            <line x1="86" y1="178" x2="86" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
-            <line x1="114" y1="178" x2="114" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
-            <line x1="120" y1="179" x2="120" y2="184" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
-            <line x1="126" y1="178" x2="126" y2="183" stroke="#f472b6" stroke-width="1" opacity="0.5"/>
-            <!-- Crown -->
-            <g transform="translate(100,56)">
-              <polygon points="0,-13 -4,-4 4,-4" fill="#f472b6"/>
-              <polygon points="-9,-8 -13,0 -5,0" fill="#f472b6"/>
-              <polygon points="9,-8 13,0 5,0" fill="#f472b6"/>
-              <ellipse cx="0" cy="-4" rx="5.5" ry="5.5" fill="#ec4899" stroke="#fce7f3" stroke-width="1"/>
-              <circle cx="0" cy="-4" r="2" fill="#fce7f3" opacity="0.8"/>
-            </g>
-            <!-- Bow on tail tip -->
-            <g transform="translate(152,100)">
-              <ellipse cx="-6" cy="0" rx="5" ry="3" fill="#f472b6" opacity="0.8" transform="rotate(-20)"/>
-              <ellipse cx="6" cy="0" rx="5" ry="3" fill="#f472b6" opacity="0.8" transform="rotate(20)"/>
-              <circle cx="0" cy="0" r="2.5" fill="#ec4899"/>
-            </g>
-          </svg>
+    <!-- DYKKER, SVØMMENDE (vender mod HØJRE) -->
+    <symbol id="c-diver" viewBox="0 0 165 86">
+      <ellipse cx="12" cy="40" rx="13" ry="7.5" transform="rotate(-22 12 40)" fill="#1d4f6b"/>
+      <ellipse cx="15" cy="58" rx="13" ry="7.5" transform="rotate(-8 15 58)" fill="#1d4f6b"/>
+      <g stroke="#2f6f92" stroke-width="10" stroke-linecap="round" fill="none"><path d="M26 42l26-4M28 56l24-8"/></g>
+      <rect x="46" y="30" width="56" height="26" rx="13" fill="#2f6f92"/>
+      <rect x="56" y="20" width="34" height="13" rx="6.5" fill="#e2b455"/>
+      <path d="M88 26h6" stroke="#b98c30" stroke-width="4" stroke-linecap="round"/>
+      <path d="M98 44l24 8" stroke="#2f6f92" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <circle cx="114" cy="36" r="15" fill="#2f6f92"/>
+      <path d="M108 29h16a5 5 0 0 1 5 5v5a5 5 0 0 1-5 5h-11z" fill="#bdeef7" opacity=".92"/>
+      <circle cx="118" cy="36" r="2.6" fill="#0f3550"/>
+      <g fill="none" stroke="#dff6fb" stroke-width="3.4" opacity=".9">
+        <circle cx="138" cy="20" r="6"/><circle cx="150" cy="9" r="4"/><circle cx="158" cy="20" r="2.6"/>
+      </g>
+    </symbol>
 
-          <!-- Handbag charm — now pink -->
-          <div class="bag-charm">
-            <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-              <path d="M28 28 Q28 13 40 13 Q52 13 52 28" stroke="#be185d" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <rect x="18" y="28" width="44" height="36" rx="6" fill="#ec4899" stroke="#fda4d0" stroke-width="1.5"/>
-              <path d="M18 44 Q40 37 62 44" stroke="#fda4d0" stroke-width="1.2" fill="none"/>
-              <circle cx="40" cy="44" r="4.5" fill="#fda4d0"/>
-              <circle cx="40" cy="44" r="2" fill="white" opacity="0.8"/>
-              <line x1="18" y1="56" x2="62" y2="56" stroke="#fda4d0" stroke-width="0.8" opacity="0.5"/>
-              <!-- LV-style pattern hint -->
-              <text x="27" y="40" font-size="7" fill="#fce7f3" opacity="0.4" font-family="serif">✦</text>
-              <text x="44" y="40" font-size="7" fill="#fce7f3" opacity="0.4" font-family="serif">✦</text>
-            </svg>
+    <!-- HAVSKILDPADDE (vender mod HØJRE) -->
+    <symbol id="c-turtle" viewBox="0 0 128 92">
+      <path d="M32 28c-10-10-25-13-29-4s6 17 19 20z" fill="#3f9d6a"/>
+      <path d="M32 64c-10 10-25 13-29 4s6-17 19-20z" fill="#3f9d6a"/>
+      <path d="M86 30c8-9 19-9 21-3s-4 13-15 15z" fill="#3f9d6a"/>
+      <path d="M86 62c8 9 19 9 21 3s-4-13-15-15z" fill="#3f9d6a"/>
+      <ellipse cx="107" cy="46" rx="15" ry="12" fill="#4fb87d"/>
+      <circle cx="114" cy="41" r="2.6" fill="#12321f"/>
+      <ellipse cx="54" cy="46" rx="44" ry="31" fill="#2b7355"/>
+      <ellipse cx="54" cy="46" rx="35" ry="24" fill="#3f9d6a"/>
+      <g fill="#5fce93">
+        <path d="M54 27l13 9-5 15H46l-5-15z"/>
+        <circle cx="28" cy="46" r="7.5"/><circle cx="80" cy="46" r="7.5"/><circle cx="54" cy="63" r="6.5"/>
+      </g>
+    </symbol>
+
+    <!-- BLÆKSPRUTTE (symmetrisk) -->
+    <symbol id="c-octo" viewBox="0 0 112 124">
+      <path d="M12 62c0-27 20-48 44-48s44 21 44 48v12H12z" fill="#9a6ad8"/>
+      <g fill="none" stroke="#9a6ad8" stroke-width="11" stroke-linecap="round">
+        <path d="M23 74c-5 16 2 27-7 36"/><path d="M41 78c-4 18 4 29-2 37"/>
+        <path d="M59 78c4 18-4 29 2 37"/><path d="M77 74c5 16-2 27 7 36"/>
+      </g>
+      <circle cx="41" cy="50" r="10" fill="#fff"/><circle cx="71" cy="50" r="10" fill="#fff"/>
+      <circle cx="43" cy="52" r="4.8" fill="#2b1146"/><circle cx="73" cy="52" r="4.8" fill="#2b1146"/>
+      <path d="M49 68q7 7 14 0" stroke="#6d3fb5" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- HVAL (vender mod VENSTRE) -->
+    <symbol id="c-whale" viewBox="0 0 168 92">
+      <path d="M6 46c0-20 29-34 64-34 35 0 60 15 72 27l18-13-7 20 7 20-18-13c-12 12-37 27-72 27C35 80 6 66 6 46z" fill="#2f86bd"/>
+      <ellipse cx="66" cy="62" rx="48" ry="14" fill="#bfe6f5" opacity=".9"/>
+      <path d="M74 30c11-9 24-9 30-2-9 2-17 8-22 15z" fill="#24699a"/>
+      <circle cx="27" cy="41" r="3.8" fill="#0f3a58"/>
+      <path d="M12 53q11 7 24 5" stroke="#24699a" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- FISK (alle vender mod VENSTRE) -->
+    <symbol id="c-fish-a" viewBox="0 0 116 72">
+      <path d="M80 36c0 17-17 29-38 29S6 53 6 36 25 7 44 7s36 12 36 29z" fill="#f5952b"/>
+      <path d="M78 36l32-19-7 19 7 19z" fill="#ef7222"/>
+      <g fill="#fff"><path d="M22 12c5-2 9-3 9-3l-2 54s-4-1-9-3z"/><path d="M46 8c5 1 9 3 9 3l-4 48s-4 3-9 4z"/></g>
+      <path d="M44 7c9-6 18-5 22 1-7 0-13 2-18 6z" fill="#ef7222"/>
+      <circle cx="18" cy="29" r="5" fill="#fff"/><circle cx="17" cy="29" r="2.6" fill="#3a1b04"/>
+    </symbol>
+    <symbol id="c-fish-b" viewBox="0 0 116 70">
+      <path d="M78 35c0 16-17 27-36 27S6 51 6 35 24 7 42 7s36 12 36 28z" fill="#2f7fe0"/>
+      <path d="M76 35l32-17-7 17 7 17z" fill="#f5c542"/>
+      <path d="M30 13c15 5 26 15 30 28-13-5-26-5-36 2 0-11 2-21 6-30z" fill="#1c4fa3" opacity=".65"/>
+      <circle cx="18" cy="27" r="5" fill="#fff"/><circle cx="17" cy="27" r="2.6" fill="#0b2447"/>
+    </symbol>
+    <symbol id="c-fish-c" viewBox="0 0 100 54">
+      <path d="M8 27C22 8 52 4 74 15l16-9-5 21 5 21-16-9C52 50 22 46 8 27z" fill="#f2d34e"/>
+      <path d="M30 12c10 4 18 10 22 18-11-2-21 0-28 5-1-8 1-16 6-23z" fill="#e0b32c" opacity=".7"/>
+      <circle cx="26" cy="23" r="4" fill="#fff"/><circle cx="25" cy="23" r="2.2" fill="#3b2f06"/>
+    </symbol>
+
+    <!-- VANDMÆND -->
+    <symbol id="i-jelly" viewBox="0 0 80 110">
+      <path d="M6 44a34 30 0 0 1 68 0z" fill="currentColor"/>
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+        <path d="M18 46c-4 14 4 20 0 34s2 20 2 20"/><path d="M32 47c-3 16 5 22 1 36"/>
+        <path d="M48 47c3 16-5 22-1 36"/><path d="M62 46c4 14-4 20 0 34s-2 20-2 20"/>
+      </g>
+    </symbol>
+    <symbol id="c-jelly" viewBox="0 0 84 116">
+      <path d="M6 46a36 32 0 0 1 72 0z" fill="#f39ac4" opacity=".92"/>
+      <path d="M14 42a28 24 0 0 1 56 0z" fill="#f8c2dc" opacity=".8"/>
+      <g fill="none" stroke="#f39ac4" stroke-width="5" stroke-linecap="round">
+        <path d="M19 48c-4 15 4 21 0 36s2 21 2 21"/><path d="M34 49c-3 17 5 23 1 38"/>
+        <path d="M50 49c3 17-5 23-1 38"/><path d="M65 48c4 15-4 21 0 36s-2 21-2 21"/>
+      </g>
+    </symbol>
+
+    <!-- KRABBE (symmetrisk) -->
+    <symbol id="c-crab" viewBox="0 0 124 82">
+      <g stroke="#d94f38" stroke-width="6" stroke-linecap="round" fill="none">
+        <path d="M34 56L16 68M36 48L14 52M90 56l18 12M88 48l22 4"/>
+      </g>
+      <path d="M30 34c-9-6-20-6-24 3s3 15 11 15c5 0 9-2 11-6z" fill="#ef6a50"/>
+      <path d="M94 34c9-6 20-6 24 3s-3 15-11 15c-5 0-9-2-11-6z" fill="#ef6a50"/>
+      <ellipse cx="62" cy="50" rx="33" ry="21" fill="#e05740"/>
+      <ellipse cx="62" cy="44" rx="25" ry="12" fill="#ef7a63" opacity=".65"/>
+      <g stroke="#d94f38" stroke-width="4"><path d="M51 31v-9M73 31v-9"/></g>
+      <circle cx="51" cy="18" r="5.5" fill="#fff"/><circle cx="73" cy="18" r="5.5" fill="#fff"/>
+      <circle cx="51" cy="18" r="2.6" fill="#3d1108"/><circle cx="73" cy="18" r="2.6" fill="#3d1108"/>
+    </symbol>
+
+    <!-- SØSTJERNER -->
+    <symbol id="i-star" viewBox="0 0 100 96">
+      <path d="M50 2l13.5 30.5L96 36 72 58l6.5 34L50 76 21.5 92 28 58 4 36l32.5-3.5z" fill="currentColor"/>
+    </symbol>
+    <symbol id="c-star" viewBox="0 0 100 96">
+      <path d="M50 2l13.5 30.5L96 36 72 58l6.5 34L50 76 21.5 92 28 58 4 36l32.5-3.5z" fill="#f0803f"/>
+      <path d="M50 18l9 21 22 2-16 15 4 23-19-11-19 11 4-23-16-15 22-2z" fill="#f8a469" opacity=".8"/>
+    </symbol>
+
+    <!-- TANG -->
+    <symbol id="i-weed" viewBox="0 0 90 130">
+      <g fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round">
+        <path d="M22 128c0-30 12-40 6-62S22 30 30 8"/>
+        <path d="M50 128c4-26-8-38 0-56s10-30 4-46"/>
+        <path d="M72 128c-2-22 8-30 4-46"/>
+      </g>
+    </symbol>
+    <symbol id="c-kelp" viewBox="0 0 96 140">
+      <g fill="none" stroke="#2f8f63" stroke-width="10" stroke-linecap="round">
+        <path d="M24 138c0-32 13-43 6-66S24 32 32 8"/>
+        <path d="M54 138c4-28-9-41 0-60s11-32 4-50"/>
+      </g>
+      <g fill="none" stroke="#48b880" stroke-width="8" stroke-linecap="round"><path d="M78 138c-2-24 9-33 4-50"/></g>
+    </symbol>
+
+    <!-- KORALLER, ANEMONE, STEN, MUSLING -->
+    <symbol id="c-fan" viewBox="0 0 110 110">
+      <g fill="none" stroke="#e2705a" stroke-width="6" stroke-linecap="round">
+        <path d="M55 110V70"/>
+        <path d="M55 72C43 66 32 56 28 42M55 72c12-6 23-16 27-30"/>
+        <path d="M55 66C48 56 44 44 44 30M55 66c7-10 11-22 11-36"/>
+        <path d="M28 42c-7-7-10-16-10-26M82 42c7-7 10-16 10-26"/>
+        <path d="M44 30c-5-7-8-15-8-24M66 30c5-7 8-15 8-24"/>
+      </g>
+      <g fill="#f5a08c">
+        <circle cx="18" cy="14" r="5"/><circle cx="36" cy="5" r="5"/><circle cx="55" cy="28" r="5"/>
+        <circle cx="74" cy="5" r="5"/><circle cx="92" cy="14" r="5"/>
+      </g>
+    </symbol>
+    <symbol id="c-branch" viewBox="0 0 110 110">
+      <g fill="none" stroke="#f0803f" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M55 110V74M55 76L34 54M55 76l22-24M34 54V32M34 54L18 40M77 52V30M77 52l16-14"/>
+      </g>
+      <g fill="#f8b184"><circle cx="34" cy="28" r="8"/><circle cx="16" cy="37" r="7"/><circle cx="77" cy="26" r="8"/><circle cx="95" cy="35" r="7"/></g>
+    </symbol>
+    <symbol id="c-anemone" viewBox="0 0 110 110">
+      <path d="M22 110c0-20 14-31 33-31s33 11 33 31z" fill="#8b5cf6"/>
+      <g fill="none" stroke="#a78bfa" stroke-width="7" stroke-linecap="round">
+        <path d="M33 84c-7-16-5-29 2-38"/><path d="M45 79c-5-18 0-31 6-40"/>
+        <path d="M61 79c5-18 2-31-2-40"/><path d="M76 84c9-14 9-27 2-36"/><path d="M55 76V32"/>
+      </g>
+      <g fill="#ddd6fe">
+        <circle cx="34" cy="44" r="5"/><circle cx="50" cy="37" r="5"/><circle cx="58" cy="37" r="5"/>
+        <circle cx="77" cy="46" r="5"/><circle cx="55" cy="30" r="5"/>
+      </g>
+    </symbol>
+    <symbol id="c-rock" viewBox="0 0 110 80">
+      <path d="M2 80C2 50 22 28 48 28s60 22 60 52z" fill="#33607a"/>
+      <path d="M22 80c0-20 11-35 26-40-18 13-18 27-16 40z" fill="#457f9e" opacity=".8"/>
+    </symbol>
+    <symbol id="c-shell" viewBox="0 0 100 84">
+      <path d="M50 82C22 82 4 60 4 36 4 16 24 4 50 4s46 12 46 32c0 24-18 46-46 46z" fill="#f3c9c0"/>
+      <g stroke="#dfa294" stroke-width="3.4" fill="none" stroke-linecap="round">
+        <path d="M50 82V8M50 82L20 24M50 82l30-58M50 82L8 46M50 82l42-36"/>
+      </g>
+    </symbol>
+
+    <!-- SKATTEKISTE -->
+    <symbol id="i-chest-body" viewBox="0 0 120 70">
+      <rect x="3" y="4" width="114" height="62" rx="7" fill="#8a5a33"/>
+      <g fill="#6f4522"><rect x="3" y="26" width="114" height="4"/><rect x="3" y="48" width="114" height="4"/></g>
+      <g fill="#e2b455"><rect x="15" y="4" width="11" height="62"/><rect x="94" y="4" width="11" height="62"/></g>
+      <rect x="3" y="4" width="114" height="62" rx="7" fill="none" stroke="#5d3719" stroke-width="4"/>
+      <rect x="49" y="34" width="22" height="24" rx="5" fill="#f0cd76" stroke="#a8802f" stroke-width="3"/>
+      <circle cx="60" cy="44" r="4" fill="#7a5a18"/>
+      <path d="M60 46v7" stroke="#7a5a18" stroke-width="3.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-chest-lid" viewBox="0 0 120 46">
+      <path d="M3 46V30C3 13 29 3 60 3s57 10 57 27v16z" fill="#8a5a33"/>
+      <path d="M15 46V31c0-7 3-13 8-17v32z" fill="#e2b455"/>
+      <path d="M97 46V31c0-7-3-13-8-17v32z" fill="#e2b455"/>
+      <path d="M3 38h114v8H3z" fill="#c9a24d"/>
+      <path d="M3 46V30C3 13 29 3 60 3s57 10 57 27v16z" fill="none" stroke="#5d3719" stroke-width="4"/>
+    </symbol>
+    <symbol id="i-chest-lid-in" viewBox="0 0 120 46">
+      <path d="M3 46V30C3 13 29 3 60 3s57 10 57 27v16z" fill="#e2b455"/>
+      <path d="M13 46V31c0-12 21-20 47-20s47 8 47 20v15z" fill="#7c4d27"/>
+      <g stroke="#5d3719" stroke-width="1.8" fill="none" opacity=".55">
+        <path d="M15 38h90M20 29h80M30 21h60"/>
+      </g>
+      <path d="M13 46V31c0-12 21-20 47-20s47 8 47 20v15z" fill="url(#g-lidlight)"/>
+      <path d="M13 46V31c0-12 21-20 47-20s47 8 47 20v15z" fill="none" stroke="#5d3719" stroke-width="2.5"/>
+      <path d="M3 46V30C3 13 29 3 60 3s57 10 57 27v16z" fill="none" stroke="#5d3719" stroke-width="4"/>
+    </symbol>
+    <symbol id="i-chest-open" viewBox="0 0 120 70">
+      <path d="M10 4h100a7 7 0 0 1 7 7v12H3V11a7 7 0 0 1 7-7z" fill="#1c0e04"/>
+      <path d="M10 4h100a7 7 0 0 1 7 7v12H3V11a7 7 0 0 1 7-7z" fill="url(#g-inside)"/>
+      <g fill="#e8b64a">
+        <ellipse cx="40" cy="19" rx="15" ry="4.4"/>
+        <ellipse cx="80" cy="19.5" rx="16" ry="4.4"/>
+        <ellipse cx="60" cy="16" rx="13" ry="4" fill="#ffe089"/>
+        <circle cx="26" cy="16" r="3.6" fill="#ffe089"/>
+        <circle cx="96" cy="17" r="3.6" fill="#ffe089"/>
+        <circle cx="66" cy="12" r="3.2" fill="#fff3c4"/>
+
+      </g>
+      <path d="M3 23h114" stroke="#6f4522" stroke-width="3" fill="none"/>
+    </symbol>
+
+    <symbol id="i-bed" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 74V30"/>
+        <path d="M10 52h66c9 0 14 6 14 14v8"/>
+        <path d="M10 64h80"/>
+        <rect x="21" y="39" width="26" height="13" rx="6.5"/>
+      </g>
+    </symbol>
+    <symbol id="i-plate" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round">
+        <circle cx="50" cy="50" r="30"/><circle cx="50" cy="50" r="17"/>
+      </g>
+    </symbol>
+    <symbol id="i-ticket" viewBox="0 0 100 100">
+      <path d="M14 30h72a6 6 0 0 1 6 6v9a9 9 0 0 0 0 18v9a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6v-9a9 9 0 0 0 0-18v-9a6 6 0 0 1 6-6z" fill="none" stroke="currentColor" stroke-width="7"/>
+      <path d="M50 34v10M50 52v10M50 70v6" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="ocean">
+  <div id="caustics"></div>
+  <div id="lightrays"></div>
+</div>
+
+<div id="reef">
+  <svg class="sandsvg" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 96C110 62 190 108 310 92 450 74 520 118 660 104 800 90 880 46 1000 74c98 23 150 4 200-10V200H0z" fill="url(#g-sand)"/>
+    <path d="M0 128C130 106 220 140 350 128 480 116 560 148 690 138 820 128 900 100 1020 118c90 13 140 6 180-4V200H0z" fill="#cbab76" opacity=".45"/>
+  </svg>
+</div>
+
+<div class="swimlayer" id="swimBack"></div>
+
+<button id="sound" aria-label="Slå lyd til eller fra">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 5 6 9H2v6h4l5 4z"/><path class="wave" d="M15.5 8.5a5 5 0 0 1 0 7"/><path class="wave" d="M18.5 5.5a9 9 0 0 1 0 13"/>
+  </svg>
+</button>
+
+<!-- SCENEN -->
+<div id="stage">
+  <div id="zoomer">
+    <div id="book">
+
+      <div id="inside">
+        <section class="page" id="left">
+          <div class="page-deco">
+            <div class="art tint-sea" style="left:-5%;bottom:-8%;width:26%;height:46%"><svg><use href="#i-weed"/></svg></div>
+            <div class="art tint-sand" style="right:4%;top:4%;width:11%;height:12%;transform:rotate(14deg)"><svg><use href="#i-star"/></svg></div>
+            <div class="art tint-sea" style="right:-2%;bottom:1%;width:25%;height:13%;opacity:.7"><svg><use href="#i-dachs"/></svg></div>
           </div>
-        </div>
+          <div class="crest"><span class="line"></span><svg><use href="#i-seahorse"/></svg><span class="line"></span></div>
+          <h1>Tillykke med dagen<span class="navn" id="navnEl">Kirsten</span></h1>
+          <div class="greet" id="greetEl"></div>
+          <div class="sign" id="signEl"></div>
+        </section>
 
-        <div class="front-title">
-          <span class="year">Klasse af 1993</span>
-          <h1>Tillykke<br/><em>And-Sophia</em></h1>
-        </div>
-
-        <div class="click-hint">✦ &nbsp; Åbn kortet &nbsp; ✦</div>
+        <section class="page" id="right">
+          <div class="porthole">
+            <div class="ph-glass">
+              <div class="ph-sand"></div>
+              <div class="ph-item" style="left:4%;bottom:0;width:20%;height:54%"><svg><use href="#c-kelp"/></svg></div>
+              <div class="ph-item" style="right:6%;bottom:2%;width:17%;height:22%"><svg><use href="#c-fan"/></svg></div>
+              <div class="ph-item" style="right:26%;bottom:1%;width:11%;height:11%"><svg><use href="#c-star"/></svg></div>
+              <div class="ph-item" style="left:30%;top:20%;width:32%;height:46%"><svg><use href="#c-seahorse"/></svg></div>
+              <div class="ph-item" style="left:9%;top:20%;width:20%;height:13%"><svg><use href="#c-fish-a"/></svg></div>
+              <div class="ph-item" style="right:8%;top:42%;width:16%;height:9%"><svg><use href="#c-fish-c"/></svg></div>
+              <div class="ph-shine"></div>
+            </div>
+            <div class="ph-bolts"></div>
+          </div>
+        </section>
       </div>
 
-      <!-- BACK -->
-      <div class="card-back">
-        <div class="back-ornament"></div>
-        <div class="back-ornament-bottom"></div>
-
-        <div class="back-label">✦ Din særlige dag ✦</div>
-
-        <div class="back-message">
-          Kære <span class="highlight">And-Sophia</span>,<br><br>
-          Siden 1993 har verden haft dig — og det er et privilegium.<br><br>
-          Du er som en <span class="highlight">designer-taske</span>: tidløs, stilfuld og med en charme der aldrig går af mode.<br><br>
-          Og ligesom en kat lever du på dine egne præmisser — elegant, uafhængig <span class="highlight">(ish)</span> og altid med perfekt timing.
-        </div>
-
-        <div class="age-reveal">
-          <div class="age-counter-area" id="ageCounter">
-            <span class="number" id="ageNumber">32</span>
-            <span class="number-label">år & fantastisk</span>
-            <span class="tap-hint">✦ tryk for at fejre ✦</span>
+      <div id="cover">
+        <div class="cover-face">
+          <div class="cover-art">
+            <div class="art tint-cool" style="left:50%;top:50%;translate:-50% -50%;width:44%;height:74%;opacity:.5"><svg><use href="#i-seahorse"/></svg></div>
+            <div class="art" style="left:2%;bottom:-4%;width:17%;height:56%"><svg><use href="#c-kelp"/></svg></div>
+            <div class="art" style="right:2%;bottom:-6%;width:15%;height:48%;opacity:.9"><svg><use href="#c-kelp"/></svg></div>
+            <div class="art" style="left:18%;bottom:0%;width:12%;height:26%"><svg><use href="#c-fan"/></svg></div>
+            <div class="art" style="right:19%;bottom:-1%;width:11%;height:24%"><svg><use href="#c-anemone"/></svg></div>
+            <div class="art" style="left:33%;bottom:-1%;width:13%;height:17%"><svg><use href="#c-rock"/></svg></div>
+            <div class="art" style="left:36%;bottom:8%;width:15%;height:13%"><svg><use href="#c-dachs"/></svg></div>
+            <div class="art" style="right:33%;bottom:1%;width:7%;height:11%;transform:rotate(18deg)"><svg><use href="#c-star"/></svg></div>
+            <div class="art" style="left:12%;bottom:2%;width:6%;height:9%"><svg><use href="#c-shell"/></svg></div>
+            <div class="art tint-cool" style="right:7%;top:6%;width:12%;height:38%;opacity:.55"><svg><use href="#i-diver"/></svg></div>
+            <div class="art" style="left:7%;top:8%;width:9%;height:20%;opacity:.9"><svg><use href="#c-jelly"/></svg></div>
+            <div class="art" style="left:13%;top:42%;width:14%;height:10%;opacity:.9"><svg><use href="#c-fish-a"/></svg></div>
+            <div class="art" style="right:12%;top:52%;width:11%;height:8%;opacity:.85"><svg><use href="#c-fish-b"/></svg></div>
+            <div class="art" style="right:25%;top:32%;width:8%;height:6%;opacity:.8"><svg><use href="#c-fish-c"/></svg></div>
           </div>
+          <div class="cover-frame"></div>
         </div>
+        <div class="cover-back"></div>
 
-        <div class="back-signature">Med kærlighed & konfetti 🐾</div>
+        <div id="sealWrap">
+          <svg id="sealRing" viewBox="0 0 100 100">
+            <circle id="ringTrack" cx="50" cy="50" r="46"/>
+            <circle id="ringFill" cx="50" cy="50" r="46"/>
+          </svg>
+          <div id="seal"><svg viewBox="0 0 100 110"><use href="#i-seahorse"/></svg></div>
+        </div>
       </div>
 
     </div>
   </div>
 </div>
 
+<div id="hint"></div>
+
+<div class="swimlayer" id="swimFront"></div>
+
+<!-- SKATTEKISTEN PÅ HAVBUNDEN -->
+<button id="chest" aria-label="Åbn skattekisten">
+  <div id="chestInner">
+    <div class="chest-glow"></div>
+    <div class="chest-lid"><div class="lid-face lid-out"><svg viewBox="0 0 120 46"><use href="#i-chest-lid"/></svg></div><div class="lid-face lid-in"><svg viewBox="0 0 120 46"><use href="#i-chest-lid-in"/></svg></div></div>
+    <div class="chest-body"><svg viewBox="0 0 120 70"><use href="#i-chest-body"/></svg></div>
+    <div class="chest-mouth"><svg viewBox="0 0 120 70"><use href="#i-chest-open"/></svg></div>
+  </div>
+  <div class="sandpuff" id="sandpuff"></div>
+</button>
+
+<div id="burst"></div>
+
+<!-- QUIZ -->
+<div class="overlay" id="quizOverlay">
+  <div class="sheet" id="quizSheet">
+    <div class="q-top" id="qDots"></div>
+    <p class="q-text" id="qText"></p>
+    <div class="opts" id="qOpts"></div>
+    <div class="hint-line" id="qHint"></div>
+    <div class="q-foot"><button class="linkish" id="qSkip" hidden>Spring over — kisten er din alligevel</button></div>
+  </div>
+</div>
+
+<!-- GAVEKORT -->
+<div class="overlay" id="voucherOverlay">
+  <div class="sheet">
+    <div class="voucher">
+      <div class="v-crest"><svg><use href="#i-seahorse"/></svg></div>
+      <h2 class="v-title">Gavekort</h2>
+      <div class="v-sub" id="vSubEl">To gode oplevelser</div>
+      <div class="v-items" id="vItems"></div>
+      <div class="v-foot">
+        <div class="v-to">Til<b id="vToEl">Kirsten og Henrik</b></div>
+        <div class="v-to" style="text-align:right">Fra<b id="vFromEl">David og Julie</b></div>
+      </div>
+    </div>
+    <div class="closebar"><button class="btn" id="vClose">Tilbage til kortet</button></div>
+  </div>
+</div>
+
 <script>
-// ── Particles (mix of pink + gold) ──
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
+/* =============================================================
+   ALT TEKST SAMLET ÉT STED
+   ============================================================= */
+const CONFIG = {
+  navn: "Kirsten",
+  overskrift: "Tillykke med dagen",
 
-const stars = Array.from({length: 110}, () => ({
-  x: Math.random() * canvas.width,
-  y: Math.random() * canvas.height,
-  r: Math.random() * 1.8 + 0.3,
-  speed: Math.random() * 0.003 + 0.001,
-  offset: Math.random() * Math.PI * 2,
-  pink: Math.random() > 0.45   // 55% pink, 45% gold
-}));
+  hilsen: [
+    "Vi ledte længe efter noget, der kunne svømme, vrikke med halen eller vrinske. Desværre kræver den slags både foder, forsikring og en samtale med kommunen.",
+    "Så vi fandt noget andet. Det skal hverken luftes eller fodres — det skal bare bruges. Helst sammen med nogen du holder af."
+  ],
+  afsenderLinje: "Kærlig hilsen",
+  afsender: "David og Julie",
 
-function drawParticles(t) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  stars.forEach(s => {
-    const a = 0.25 + 0.6 * Math.abs(Math.sin(t * s.speed + s.offset));
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = s.pink ? `rgba(244,114,182,${a})` : `rgba(201,169,110,${a})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(drawParticles);
+  forsideHint: "Hold fingeren på seglet",
+
+  quiz: [
+    {
+      q: "Søhesten er kendt for én ret usædvanlig ting. Hvilken?",
+      svar: [
+        { t: "Det er hannen, der går gravid", ok: true },
+        { t: "Den kan vrinske under vand", ok: false },
+        { t: "Den sover stående", ok: false },
+        { t: "Den skifter farve, når den bliver flov", ok: false }
+      ],
+      hint: "Tænk på, hvem der har den hårdeste tørn i søhestefamilien."
+    },
+    {
+      q: "Hvad hedder den grævlingejagende hund, der ligner en pølse?",
+      svar: [
+        { t: "Gravhund", ok: true },
+        { t: "Sofahund", ok: false },
+        { t: "Tæppehund", ok: false },
+        { t: "Undervandshund", ok: false }
+      ],
+      hint: "Den graver. Deraf navnet."
+    },
+    {
+      q: "Hvor stor en del af sofaen har en gravhund brug for?",
+      svar: [
+        { t: "Det hele", ok: true },
+        { t: "En fjerdedel", ok: false },
+        { t: "Kun hjørnet", ok: false },
+        { t: "Den foretrækker gulvet", ok: false }
+      ],
+      hint: "Vær nu realistisk."
+    }
+  ],
+
+  gavekortUndertekst: "To ting, der hører sammen",
+  gaver: [
+    { ikon: "i-bed",    h: "1.500 kr. til Hørby Færgekro", p: "Til et ophold på kroen — spis godt og bliv natten over ved vandet." },
+    { ikon: "i-ticket", h: "2 × entré til Nyvang",          p: "Andelslandsbyen ligger få minutter fra kroen — oplagt dagen derpå." }
+  ],
+  gavekortTil: "Kirsten og Henrik",
+  gavekortFra: "David og Julie",
+
+  holdTid: 1000
+};
+
+/* =============================================================
+   LYD
+   ============================================================= */
+const Lyd = (() => {
+  let ctx = null, on = true;
+  const wake = () => {
+    if (!ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (AC) ctx = new AC(); }
+    if (ctx && ctx.state === "suspended") ctx.resume();
+  };
+  const tone = (f0, f1, t, type = "sine", vol = .12, delay = 0) => {
+    if (!on || !ctx) return;
+    const t0 = ctx.currentTime + delay;
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f0, t0);
+    o.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t0 + t);
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + .012);
+    g.gain.exponentialRampToValueAtTime(.0001, t0 + t);
+    o.connect(g).connect(ctx.destination); o.start(t0); o.stop(t0 + t + .05);
+  };
+  const noise = (t, vol = .07, delay = 0, freq = 1100) => {
+    if (!on || !ctx) return;
+    const n = Math.floor(ctx.sampleRate * t);
+    const buf = ctx.createBuffer(1, n, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const s = ctx.createBufferSource(); s.buffer = buf;
+    const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq;
+    const g = ctx.createGain(); g.gain.value = vol;
+    s.connect(f).connect(g).connect(ctx.destination); s.start(ctx.currentTime + delay);
+  };
+  return {
+    wake,
+    toggle(){ on = !on; if (on) wake(); return on; },
+    hold(){ tone(180, 460, .9, "sine", .05); },
+    segl(){ tone(520, 120, .5, "sine", .12); noise(.4, .05); },
+    zoom(){ tone(200, 700, 1.2, "sine", .06); noise(1.0, .03, 0, 500); },
+    aabn(){ [0,.09,.18].forEach((d,i)=>tone(420 + i*130, 900 + i*160, .5, "triangle", .09, d)); },
+    svirp(){ tone(700, 1500, .35, "sine", .06); },
+    dunk(v){ tone(150, 55, .32, "sine", v || .16); noise(.28, (v || .16) / 2, 0, 320); },
+    rigtig(){ [523,659,784].forEach((f,i)=>tone(f, f, .34, "sine", .10, i*.075)); },
+    forkert(){ tone(240, 170, .3, "sine", .09); },
+    knirk(){ tone(320, 180, .5, "sawtooth", .04); },
+    fanfare(){ [523,659,784,1047,1319].forEach((f,i)=>tone(f, f, .7, "triangle", .10, i*.11)); noise(.7,.05,.1); },
+    klik(){ tone(700, 500, .07, "sine", .06); }
+  };
+})();
+
+const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* =============================================================
+   BOBLER
+   ============================================================= */
+const ocean = document.getElementById("ocean");
+function spawnBubble(){
+  if (reduced) return;
+  const b = document.createElement("div");
+  b.className = "bubble";
+  const s = 5 + Math.random() * 20;
+  b.style.width = b.style.height = s + "px";
+  b.style.left = Math.random() * 100 + "vw";
+  b.style.setProperty("--drift", (Math.random() * 90 - 45) + "px");
+  b.style.animation = `rise ${9 + Math.random() * 12}s linear forwards`;
+  ocean.appendChild(b);
+  setTimeout(() => b.remove(), 22000);
 }
-requestAnimationFrame(drawParticles);
+if (!reduced){ for (let i = 0; i < 18; i++) setTimeout(spawnBubble, i * 380); setInterval(spawnBubble, 800); }
 
-// ── Card flip (bulletproof for Messenger/WebView) ──
-const card = document.getElementById('card');
-let flipped = false;
-let touchMoved = false;
+/* =============================================================
+   SVØMMERE
+   FACE = den vej figuren er TEGNET til at vende.
+   -1 = mod venstre, 1 = mod højre, 0 = symmetrisk.
+   Figuren spejles kun, hvis den svømmer den modsatte vej.
+   ============================================================= */
+const VIEWBOX = {
+  "c-fish-a":"0 0 116 72", "c-fish-b":"0 0 116 70", "c-fish-c":"0 0 100 54",
+  "c-turtle":"0 0 128 92", "c-whale":"0 0 168 92", "c-octo":"0 0 112 124",
+  "c-jelly":"0 0 84 116", "c-diver":"0 0 165 86", "c-seahorse":"0 0 100 110",
+  "c-crab":"0 0 124 82", "c-dachs":"0 0 140 74"
+};
+const FACE = {
+  "c-fish-a":-1, "c-fish-b":-1, "c-fish-c":-1, "c-whale":-1, "c-dachs":-1,
+  "c-turtle":1, "c-diver":1, "c-seahorse":1,
+  "c-octo":0, "c-jelly":0, "c-crab":0
+};
 
-function doFlip() {
-  flipped = !flipped;
-  card.classList.toggle('flipped', flipped);
-  if (flipped) launchConfetti(25);
-}
+const SWIMMERS = [
+  { id:"c-whale",   w:230, top:"10%", dur:96,  dir:1,  lag:"back",  op:.9 },
+  { id:"c-turtle",  w:130, top:"56%", dur:72,  dir:-1, lag:"front", op:1  },
+  { id:"c-fish-a",  w:82,  top:"24%", dur:44,  dir:1,  lag:"front", op:1  },
+  { id:"c-fish-a",  w:58,  top:"29%", dur:47,  dir:1,  lag:"front", op:.95 },
+  { id:"c-fish-b",  w:74,  top:"68%", dur:52,  dir:-1, lag:"back",  op:1  },
+  { id:"c-fish-b",  w:52,  top:"73%", dur:56,  dir:-1, lag:"back",  op:.9 },
+  { id:"c-fish-c",  w:46,  top:"39%", dur:38,  dir:1,  lag:"front", op:.95 },
+  { id:"c-fish-c",  w:38,  top:"44%", dur:41,  dir:1,  lag:"front", op:.85 },
+  { id:"c-fish-c",  w:42,  top:"35%", dur:35,  dir:-1, lag:"back",  op:.9 },
+  { id:"c-diver",   w:170, top:"17%", dur:88,  dir:-1, lag:"front", op:1  },
+  { id:"c-diver",   w:126, top:"62%", dur:104, dir:1,  lag:"back",  op:.95 },
+  { id:"c-octo",    w:92,  top:"74%", dur:118, dir:-1, lag:"back",  op:.95 },
+  { id:"c-jelly",   w:66,  top:"33%", dur:126, dir:1,  lag:"front", op:.85 },
+  { id:"c-jelly",   w:48,  top:"50%", dur:140, dir:-1, lag:"back",  op:.8 },
+  { id:"c-seahorse",w:74,  top:"64%", dur:110, dir:1,  lag:"front", op:.95 },
+  { id:"c-dachs",   w:118, top:"44%", dur:80,  dir:-1, lag:"front", op:1  }
+];
 
-// Track if finger moved (to avoid flip on scroll)
-card.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
-card.addEventListener('touchmove',  () => { touchMoved = true;  }, { passive: true });
-card.addEventListener('touchend', e => {
-  if (touchMoved) return;
-  if (e.target.closest('#ageCounter')) return;
-  doFlip();
-}, { passive: true });
+const layers = { back: document.getElementById("swimBack"), front: document.getElementById("swimFront") };
+SWIMMERS.forEach((s, i) => {
+  const el = document.createElement("div");
+  el.className = "swim";
+  el.style.cssText = `width:${s.w}px;top:${s.top};opacity:${s.op}`;
+  el.innerHTML = `<div class="bob"><svg viewBox="${VIEWBOX[s.id]}"><use href="#${s.id}"/></svg></div>`;
+  const bob = el.querySelector(".bob");
+  bob.style.animationDuration = (3.6 + (i % 5) * .9) + "s";
+  bob.style.animationDelay = (-i * .7) + "s";
+  layers[s.lag].appendChild(el);
+  if (reduced) { el.style.transform = `translateX(${18 + i * 4}vw)`; return; }
 
-// Fallback click for non-touch
-card.addEventListener('click', e => {
-  if (e.target.closest('#ageCounter')) return;
-  // Only fire on click if no touch support (avoids double-fire)
-  if (!('ontouchstart' in window)) doFlip();
+  const face = FACE[s.id] || 0;
+  const flip = (face !== 0 && face !== s.dir) ? " scaleX(-1)" : "";
+  const from = s.dir > 0 ? `translateX(-${s.w + 40}px)${flip}` : `translateX(calc(100vw + 40px))${flip}`;
+  const to   = s.dir > 0 ? `translateX(calc(100vw + 40px))${flip}` : `translateX(-${s.w + 40}px)${flip}`;
+  el.animate([{ transform: from }, { transform: to }],
+    { duration: s.dur * 1000, iterations: Infinity, delay: -Math.round(s.dur * 1000 * ((i * 0.137) % 1)), easing: "linear" });
 });
 
-// ── Glitter on touch/move (more + multi-colour) ──
-const cardFront = document.getElementById('cardFront');
-const glitterColors = ['#f472b6','#fda4d0','#ec4899','#fce7f3','#e8d5a3','#fff','#db2777'];
-const glitterSizes  = [3, 4, 5, 6, 7, 8];
+/* =============================================================
+   REVET
+   ============================================================= */
+const REEF = [
+  { id:"c-kelp",    w:9,  l:2,  h:78, sway:"sway-slow" },
+  { id:"c-kelp",    w:7,  l:8,  h:62, sway:"sway" },
+  { id:"c-fan",     w:9,  l:14, h:52, sway:"sway" },
+  { id:"c-rock",    w:12, l:20, h:30 },
+  { id:"c-anemone", w:8,  l:27, h:44, sway:"sway-fast" },
+  { id:"c-branch",  w:9,  l:33, h:50, sway:"sway-slow" },
+  { id:"c-star",    w:6,  l:40, h:22, rot:-16 },
+  { id:"c-shell",   w:5,  l:57, h:15 },
+  { id:"c-crab",    w:9,  l:62, h:24 },
+  { id:"c-fan",     w:10, l:68, h:56, sway:"sway-fast" },
+  { id:"c-rock",    w:14, l:74, h:34 },
+  { id:"c-anemone", w:9,  l:80, h:48, sway:"sway" },
+  { id:"c-star",    w:6,  l:86, h:22, rot:20 },
+  { id:"c-branch",  w:10, l:89, h:54, sway:"sway-slow" },
+  { id:"c-kelp",    w:9,  l:94, h:76, sway:"sway-fast" }
+];
+const REEF_VB = { "c-kelp":"0 0 96 140", "c-fan":"0 0 110 110", "c-rock":"0 0 110 80",
+  "c-anemone":"0 0 110 110", "c-branch":"0 0 110 110", "c-star":"0 0 100 96",
+  "c-shell":"0 0 100 84", "c-crab":"0 0 124 82" };
+const reef = document.getElementById("reef");
+REEF.forEach((r, i) => {
+  const d = document.createElement("div");
+  d.className = "item " + (r.sway || "");
+  d.style.cssText = `left:${r.l}%;width:${r.w}%;height:${r.h}%`;
+  if (r.rot) d.style.transform = `rotate(${r.rot}deg)`;
+  d.style.animationDelay = (-i * .8) + "s";
+  d.innerHTML = `<svg viewBox="${REEF_VB[r.id]}" preserveAspectRatio="xMidYMax meet"><use href="#${r.id}"/></svg>`;
+  reef.appendChild(d);
+});
 
-function spawnGlitter(x, y, force = false) {
-  const threshold = force ? 0 : 0.55;   // fire more often (was 0.85)
-  if (!force && Math.random() > threshold) return;
-  const rect = cardFront.getBoundingClientRect();
-  const count = force ? 6 : 1;
-  for (let i = 0; i < count; i++) {
-    const g = document.createElement('div');
-    g.className = 'glitter';
-    const size = glitterSizes[Math.floor(Math.random() * glitterSizes.length)];
-    const color = glitterColors[Math.floor(Math.random() * glitterColors.length)];
-    const ox = (Math.random() - 0.5) * 30;
-    const oy = (Math.random() - 0.5) * 30;
-    g.style.cssText = `
-      left:${(x - rect.left) + ox}px;
-      top:${(y - rect.top) + oy}px;
-      width:${size}px; height:${size}px;
-      background:${color};
-      box-shadow: 0 0 ${size}px ${color};
-      animation-duration:${0.8 + Math.random()*0.8}s;
-    `;
-    cardFront.appendChild(g);
-    setTimeout(() => g.remove(), 1600);
+/* =============================================================
+   KOØJET: bolte og bobler
+   ============================================================= */
+const bolts = document.querySelector(".ph-bolts");
+for (let i = 0; i < 8; i++){
+  const a = i / 8 * Math.PI * 2 - Math.PI / 2;
+  const b = document.createElement("div");
+  b.className = "bolt";
+  b.style.left = (50 + 46.5 * Math.cos(a)) + "%";
+  b.style.top  = (50 + 46.5 * Math.sin(a)) + "%";
+  bolts.appendChild(b);
+}
+const glass = document.querySelector(".ph-glass");
+if (!reduced){
+  for (let i = 0; i < 5; i++){
+    const b = document.createElement("div");
+    b.className = "ph-bub";
+    const s = 3 + Math.random() * 5;
+    b.style.cssText = `width:${s}px;height:${s}px;left:${20 + Math.random() * 60}%;bottom:6%`;
+    b.style.animation = `phrise ${5 + Math.random() * 5}s linear infinite`;
+    b.style.animationDelay = (-i * 1.9) + "s";
+    glass.appendChild(b);
   }
 }
 
-cardFront.addEventListener('mousemove', e => spawnGlitter(e.clientX, e.clientY));
-cardFront.addEventListener('touchmove', e => {
-  const t = e.touches[0]; spawnGlitter(t.clientX, t.clientY);
-}, { passive: true });
+/* =============================================================
+   TEKST FRA CONFIG
+   ============================================================= */
+document.getElementById("navnEl").textContent = CONFIG.navn;
+document.querySelector("h1").childNodes[0].nodeValue = CONFIG.overskrift;
+document.getElementById("greetEl").innerHTML = CONFIG.hilsen.map(p => `<p>${p}</p>`).join("");
+document.getElementById("signEl").innerHTML = `<small>${CONFIG.afsenderLinje}</small>${CONFIG.afsender}`;
+document.getElementById("hint").textContent = CONFIG.forsideHint;
+document.getElementById("vSubEl").textContent = CONFIG.gavekortUndertekst;
+document.getElementById("vToEl").textContent = CONFIG.gavekortTil;
+document.getElementById("vFromEl").textContent = CONFIG.gavekortFra;
+document.getElementById("vItems").innerHTML = CONFIG.gaver.map(g => `
+  <div class="v-item">
+    <div class="v-ic"><svg><use href="#${g.ikon}"/></svg></div>
+    <div><div class="v-h">${g.h}</div><div class="v-p">${g.p}</div></div>
+  </div>`).join("");
 
-// Auto sparkles on front — spontaneous pink stars
-function autoSparkle() {
-  const rect = cardFront.getBoundingClientRect();
-  if (rect.width === 0) { setTimeout(autoSparkle, 600); return; }
-  const s = document.createElement('div');
-  s.className = 'auto-sparkle';
-  s.textContent = ['✦','✧','★','✿','♡','💖','✨'][Math.floor(Math.random()*7)];
-  s.style.left = (10 + Math.random() * 80) + '%';
-  s.style.top  = (10 + Math.random() * 80) + '%';
-  s.style.color = glitterColors[Math.floor(Math.random() * glitterColors.length)];
-  s.style.fontSize = (10 + Math.random() * 10) + 'px';
-  cardFront.appendChild(s);
-  setTimeout(() => s.remove(), 1900);
-  setTimeout(autoSparkle, 300 + Math.random() * 500);
+/* =============================================================
+   SEGL → ZOOM → KORTET ÅBNER → KISTEN HOPPER UD OG NED
+   ============================================================= */
+const book = document.getElementById("book");
+const sealWrap = document.getElementById("sealWrap");
+const ringFill = document.getElementById("ringFill");
+const hintEl = document.getElementById("hint");
+const chest = document.getElementById("chest");
+const chestInner = document.getElementById("chestInner");
+const sandpuff = document.getElementById("sandpuff");
+
+const CIRC = 2 * Math.PI * 46;
+ringFill.style.strokeDasharray = CIRC;
+ringFill.style.strokeDashoffset = CIRC;
+
+let holdTimer = null, aabnet = false;
+
+function startHold(e){
+  if (aabnet) return;
+  e.preventDefault();
+  Lyd.wake(); Lyd.hold();
+  sealWrap.classList.add("holding");
+  ringFill.style.transition = `stroke-dashoffset ${CONFIG.holdTid}ms linear`;
+  ringFill.style.strokeDashoffset = 0;
+  holdTimer = setTimeout(aabnKort, CONFIG.holdTid);
 }
-setTimeout(autoSparkle, 1200);
+function stopHold(){
+  if (aabnet || holdTimer === null) return;
+  clearTimeout(holdTimer); holdTimer = null;
+  sealWrap.classList.remove("holding");
+  ringFill.style.transition = "stroke-dashoffset .28s ease";
+  ringFill.style.strokeDashoffset = CIRC;
+  sealWrap.classList.remove("nudge"); void sealWrap.offsetWidth; sealWrap.classList.add("nudge");
+  hintEl.classList.add("show");
+}
+function aabnKort(){
+  aabnet = true; holdTimer = null;
+  hintEl.classList.remove("show");
+  document.body.classList.add("opened");
 
-// ── Confetti (heavy on pink) ──
-const confettiColors = ['#f472b6','#fda4d0','#ec4899','#fce7f3','#c9a96e','#e8d5a3','#fff','#db2777'];
-const shapes = ['●','■','▲','✦','♦','🐾','👜','💖','✨'];
+  Lyd.segl();
+  sealWrap.classList.add("melt");
+  for (let i = 0; i < 16; i++) setTimeout(spawnBubble, i * 50);
 
-function launchConfetti(count) {
-  const container = document.getElementById('confettiContainer');
-  for (let i = 0; i < count; i++) {
+  setTimeout(() => { document.body.classList.add("zoom"); Lyd.zoom(); }, 220);   /* zoom ind */
+  setTimeout(() => { book.classList.add("open"); Lyd.aabn(); }, 950);            /* kortet folder sig op */
+  setTimeout(hopChestOut, 1950);                                                 /* kisten hopper ud */
+}
+
+function hopChestOut(){
+  chest.classList.add("live");
+  if (reduced){ chest.classList.add("ready"); return; }
+
+  /* find startpunktet inde i kortet, og hvor langt kisten skal falde */
+  const c = book.getBoundingClientRect();
+  const k = chest.getBoundingClientRect();
+  const sx = (c.left + c.width * 0.68) - (k.left + k.width / 2);
+  const sy = (c.top  + c.height * 0.55) - (k.top  + k.height / 2);
+  chest.style.setProperty("--sx", Math.round(sx) + "px");
+  chest.style.setProperty("--sy", Math.round(sy) + "px");
+
+  Lyd.svirp();
+  chest.classList.add("flying");
+  chestInner.classList.add("falling");
+
+  setTimeout(() => { Lyd.dunk(.18); sandpuff.classList.add("go"); }, 800);   /* landing */
+  setTimeout(() => Lyd.dunk(.10), 1240);                                     /* hop */
+  setTimeout(() => Lyd.dunk(.06), 1440);
+
+  chestInner.addEventListener("animationend", function done(ev){
+    if (ev.animationName !== "chestY") return;
+    chestInner.removeEventListener("animationend", done);
+    chest.classList.remove("flying");
+    chestInner.classList.remove("falling");
+    chestInner.classList.add("idle");
+    chest.classList.add("ready");
+  });
+}
+
+sealWrap.addEventListener("pointerdown", startHold);
+sealWrap.addEventListener("pointerup", stopHold);
+sealWrap.addEventListener("pointercancel", stopHold);
+sealWrap.addEventListener("pointerleave", stopHold);
+sealWrap.addEventListener("contextmenu", e => e.preventDefault());
+document.getElementById("cover").addEventListener("click", () => { if (!aabnet) hintEl.classList.add("show"); });
+setTimeout(() => { if (!aabnet) hintEl.classList.add("show"); }, 2600);
+
+/* =============================================================
+   QUIZ
+   ============================================================= */
+const quizOverlay = document.getElementById("quizOverlay");
+const quizSheet = document.getElementById("quizSheet");
+const qDots = document.getElementById("qDots");
+const qText = document.getElementById("qText");
+const qOpts = document.getElementById("qOpts");
+const qHint = document.getElementById("qHint");
+const qSkip = document.getElementById("qSkip");
+
+let qi = 0, forsoeg = 0, laastOp = false;
+
+function tegnDots(){
+  qDots.innerHTML = CONFIG.quiz.map((_, i) =>
+    `<span class="dot ${i < qi ? "done" : i === qi ? "now" : ""}"></span>`).join("");
+}
+function visSpoergsmaal(){
+  const q = CONFIG.quiz[qi];
+  tegnDots();
+  qText.textContent = q.q;
+  qHint.classList.remove("show");
+  qSkip.hidden = true;
+  forsoeg = 0;
+  qOpts.innerHTML = "";
+  q.svar.forEach(s => {
+    const b = document.createElement("button");
+    b.className = "opt"; b.type = "button"; b.textContent = s.t;
+    b.addEventListener("click", () => svarKlik(b, s));
+    qOpts.appendChild(b);
+  });
+}
+function svarKlik(btn, s){
+  Lyd.wake();
+  if (s.ok){
+    Lyd.rigtig();
+    btn.classList.add("right");
+    qHint.classList.remove("show");
+    [...qOpts.children].forEach(b => b.disabled = true);
     setTimeout(() => {
-      const p = document.createElement('div');
-      p.className = 'confetti-piece';
-      p.textContent = shapes[Math.floor(Math.random() * shapes.length)];
-      p.style.left = Math.random() * 100 + 'vw';
-      p.style.top  = '-30px';
-      p.style.fontSize = (Math.random() * 16 + 10) + 'px';
-      p.style.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-      p.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's';
-      p.style.animationDelay   = (Math.random() * 0.5) + 's';
-      container.appendChild(p);
-      setTimeout(() => p.remove(), 3200);
-    }, i * 35);
+      qi++;
+      if (qi < CONFIG.quiz.length) visSpoergsmaal(); else laasOp();
+    }, 620);
+  } else {
+    Lyd.forkert();
+    forsoeg++;
+    btn.classList.add("wrong");
+    setTimeout(() => btn.classList.remove("wrong"), 900);
+    quizSheet.classList.remove("shake"); void quizSheet.offsetWidth; quizSheet.classList.add("shake");
+    qHint.textContent = CONFIG.quiz[qi].hint;
+    qHint.classList.add("show");
+    if (forsoeg >= 3) qSkip.hidden = false;
+  }
+}
+function laasOp(){
+  laastOp = true;
+  quizOverlay.classList.remove("show");
+  chestInner.classList.remove("idle");
+  chest.classList.add("live","ready","opened");
+  Lyd.knirk();
+  setTimeout(() => chest.classList.add("lidback"), 170);
+  setTimeout(() => { Lyd.fanfare(); konfetti(); mønter(); }, 380);
+  for (let i = 0; i < 22; i++) setTimeout(spawnBubble, i * 40);
+  setTimeout(visGavekort, 1350);
+}
+qSkip.addEventListener("click", () => { Lyd.klik(); laasOp(); });
+
+chest.addEventListener("click", () => {
+  Lyd.wake(); Lyd.klik();
+  if (laastOp) { visGavekort(); return; }
+  qi = 0; visSpoergsmaal();
+  quizOverlay.classList.add("show");
+});
+
+/* =============================================================
+   MØNTER OG KONFETTI
+   ============================================================= */
+function mønter(){
+  if (reduced) return;
+  for (let i = 0; i < 26; i++){
+    const c = document.createElement("div");
+    c.className = "coin";
+    const s = 8 + Math.random() * 9;
+    c.style.width = c.style.height = s + "px";
+    c.style.left = (40 + Math.random() * 20) + "%";
+    c.style.top = "32%";
+    c.style.setProperty("--cx", (Math.random() * 260 - 130) + "px");
+    c.style.setProperty("--cy", (-90 - Math.random() * 160) + "px");
+    c.style.setProperty("--cr", (Math.random() * 720 - 360) + "deg");
+    c.style.animation = `coinfly ${.9 + Math.random() * .9}s cubic-bezier(.2,.7,.4,1) forwards`;
+    c.style.animationDelay = (Math.random() * .25) + "s";
+    chest.appendChild(c);
+    setTimeout(() => c.remove(), 2600);
+  }
+}
+function konfetti(){
+  if (reduced) return;
+  const host = document.getElementById("burst");
+  const farver = ["#e8c66a","#c8973f","#3fc6dd","#bdeef7","#e2705a","#0d7ea3","#fdf7ea","#f5952b"];
+  const r = chest.getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  for (let i = 0; i < 100; i++){
+    const c = document.createElement("div");
+    c.className = "conf";
+    const ang = Math.random() * Math.PI * 2, dist = 90 + Math.random() * 460;
+    c.style.left = cx + "px"; c.style.top = cy + "px";
+    c.style.background = farver[i % farver.length];
+    c.style.setProperty("--x", Math.cos(ang) * dist + "px");
+    c.style.setProperty("--y", (Math.sin(ang) * dist - 120) + "px");
+    c.style.setProperty("--r", (Math.random() * 900 - 450) + "deg");
+    if (i % 4 === 0){ c.style.width = "8px"; c.style.height = "8px"; c.style.borderRadius = "50%"; }
+    c.style.animation = `fly ${1.3 + Math.random() * 1.5}s cubic-bezier(.15,.6,.4,1) forwards`;
+    host.appendChild(c);
+    setTimeout(() => c.remove(), 3200);
   }
 }
 
-// ── Age counter ──
-const ageCounter = document.getElementById('ageCounter');
-const ageNumber  = document.getElementById('ageNumber');
-let celebrating  = false;
+/* =============================================================
+   GAVEKORT
+   ============================================================= */
+const voucherOverlay = document.getElementById("voucherOverlay");
+function visGavekort(){ voucherOverlay.classList.add("show"); }
+document.getElementById("vClose").addEventListener("click", () => { Lyd.klik(); voucherOverlay.classList.remove("show"); });
+voucherOverlay.addEventListener("click", e => { if (e.target === voucherOverlay) voucherOverlay.classList.remove("show"); });
+quizOverlay.addEventListener("click", e => { if (e.target === quizOverlay) quizOverlay.classList.remove("show"); });
 
-function handleAgeTap(e) {
-  e.stopPropagation();
-  if (celebrating) return;
-  celebrating = true;
-  launchConfetti(50);
-  let count = 0;
-  ageNumber.textContent = '0';
-  const iv = setInterval(() => {
-    count++;
-    ageNumber.textContent = count;
-    if (count >= 32) { clearInterval(iv); celebrating = false; }
-  }, 58);
-}
-ageCounter.addEventListener('click', handleAgeTap);
-ageCounter.addEventListener('touchend', e => {
-  if (!touchMoved) handleAgeTap(e);
+/* =============================================================
+   LYDKNAP + BOBLER VED BERØRING
+   ============================================================= */
+const soundBtn = document.getElementById("sound");
+soundBtn.addEventListener("click", () => {
+  const on = Lyd.toggle();
+  soundBtn.querySelectorAll(".wave").forEach(w => w.style.opacity = on ? 1 : .15);
+  if (on) Lyd.klik();
+});
+
+document.addEventListener("pointerdown", e => {
+  if (reduced) return;
+  const b = document.createElement("div");
+  b.className = "bubble";
+  const s = 6 + Math.random() * 10;
+  b.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX}px;top:${e.clientY}px;bottom:auto;position:fixed;z-index:50;pointer-events:none`;
+  b.style.setProperty("--drift", (Math.random() * 50 - 25) + "px");
+  b.style.animation = "rise 3.2s ease-out forwards";
+  document.body.appendChild(b);
+  setTimeout(() => b.remove(), 3400);
 }, { passive: true });
 
-// ── Paw trail ──
-let lastPaw = 0;
-function spawnPaw(x, y) {
-  const now = Date.now();
-  if (now - lastPaw < 200) return;
-  lastPaw = now;
-  const p = document.createElement('div');
-  p.className = 'paw'; p.textContent = '🐾';
-  p.style.left = x + 'px'; p.style.top = y + 'px';
-  p.style.transform = `translate(-50%,-50%) rotate(${Math.random()*60-30}deg)`;
-  document.body.appendChild(p);
-  setTimeout(() => p.remove(), 900);
-}
-document.addEventListener('pointermove', e => spawnPaw(e.clientX, e.clientY));
-document.addEventListener('touchmove', e => {
-  const t = e.touches[0]; spawnPaw(t.clientX, t.clientY);
-}, { passive: true });
+let sidsteTap = 0;
+document.addEventListener("touchend", e => {
+  const nu = Date.now();
+  if (nu - sidsteTap < 320) e.preventDefault();
+  sidsteTap = nu;
+}, { passive: false });
 
-// ── Opening burst ──
-setTimeout(() => launchConfetti(18), 800);
-setTimeout(() => {
-  // burst of glitter on load
-  const rect = cardFront.getBoundingClientRect();
-  for (let i = 0; i < 12; i++) {
-    spawnGlitter(rect.left + rect.width * Math.random(), rect.top + rect.height * Math.random(), true);
+/* hvis iPad'en drejes efter kisten er landet, skal den blive liggende rigtigt */
+window.addEventListener("resize", () => {
+  if (chest.classList.contains("ready")){
+    chest.classList.remove("flying");
+    chestInner.classList.remove("falling");
   }
-}, 500);
+});
 </script>
 </body>
 </html>
