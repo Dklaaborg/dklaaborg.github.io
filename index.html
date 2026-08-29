@@ -30,6 +30,16 @@
   --wax:#b5382c;
   --wax-dark:#8d2419;
   --shadow:rgba(2,26,44,.45);
+
+  /* det mørke kort — kortets inderside, quiz-arket og gavekortet */
+  --card1:#0b2c44;
+  --card2:#07223b;
+  --card3:#05192c;
+  --card-ink:#f0e2cd;      /* brødtekst på mørk bund */
+  --card-soft:#9db3c4;     /* småt, dæmpet */
+  --creme:#fdf7ea;         /* overskrifter */
+  --coral-l:#f3947c;       /* navne og signatur */
+  --gold-soft:rgba(232,198,106,.45);
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -211,8 +221,8 @@ body.opened #hint{opacity:0 !important;visibility:hidden !important;animation:no
    ============================================================ */
 #inside{
   position:absolute;inset:0;z-index:2;border-radius:16px;overflow:hidden;
-  background:linear-gradient(155deg,var(--paper) 0%, var(--paper2) 55%, #f0e3c9 100%);
-  box-shadow:0 30px 70px -20px var(--shadow), 0 0 0 1px rgba(200,151,63,.25);
+  background:linear-gradient(155deg,var(--card1) 0%, var(--card2) 55%, var(--card3) 100%);
+  box-shadow:0 30px 70px -20px var(--shadow), 0 0 0 1px rgba(200,151,63,.38);
   display:grid;grid-template-columns:1.1fr .9fr;
   opacity:0;transform:scale(.985);
   transition:opacity .5s .35s ease, transform .8s .35s cubic-bezier(.2,.9,.3,1);
@@ -221,31 +231,36 @@ body.opened #hint{opacity:0 !important;visibility:hidden !important;animation:no
 #book.open #cover{transform:rotateY(-168deg);opacity:0;pointer-events:none;animation:none}
 #inside::before{
   content:"";position:absolute;left:calc(55% - 1px);top:5%;bottom:5%;width:2px;
-  background:linear-gradient(to bottom,transparent,rgba(200,151,63,.35),transparent);
+  background:linear-gradient(to bottom,transparent,rgba(232,198,106,.45),transparent);
   z-index:3;pointer-events:none;
 }
 .page{position:relative;padding:clamp(18px,3vmin,34px);display:flex;flex-direction:column;min-height:0}
 .page-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .page-deco .art{position:absolute}
 .page-deco .art svg{display:block;width:100%;height:100%}
-.tint-sea{color:rgba(13,126,163,.13)}
-.tint-sand{color:rgba(200,151,63,.20)}
+/* pynten inde i det mørke kort — anes frem for at forsvinde */
+.tint-sea{color:rgba(63,198,221,.11)}
+.tint-sand{color:rgba(232,198,106,.14)}
 
 /* ---------- HILSEN ---------- */
 #left{justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.crest{display:flex;align-items:center;gap:10px;color:var(--gold);margin-bottom:clamp(4px,1vmin,10px)}
-.crest .line{height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(200,151,63,.55),transparent)}
+.crest{display:flex;align-items:center;gap:10px;color:var(--gold-light);margin-bottom:clamp(4px,1vmin,10px)}
+.crest .line{height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(232,198,106,.5),transparent)}
 .crest svg{width:clamp(22px,3vmin,32px);height:clamp(22px,3vmin,32px)}
 h1{
   font-family:'Playfair Display',Georgia,serif;font-weight:600;
-  font-size:clamp(24px,4.6vmin,40px);line-height:1.06;margin:0 0 .3em;
-  color:var(--deep2);letter-spacing:.3px;
+  font-size:clamp(24px,4.6vmin,40px);line-height:1.06;margin:0 0 .34em;
+  color:var(--creme);letter-spacing:.3px;
 }
-h1 .navn{display:block;color:var(--sea);font-style:italic}
-.greet p{margin:0 0 .7em;font-size:clamp(13.5px,2vmin,17.5px);line-height:1.58;color:var(--ink)}
+h1 .navn{display:block;color:var(--coral-l);font-style:italic}
+/* verset: hver linje for sig, med hængende indryk hvis den må ombryde */
+.greet p{
+  margin:0 0 .2em;font-size:clamp(13.5px,2vmin,17.5px);line-height:1.52;color:var(--card-ink);
+  padding-left:1.2em;text-indent:-1.2em;
+}
 .greet p:last-child{margin-bottom:0}
-.sign{margin-top:clamp(8px,1.8vmin,18px);font-family:'Caveat',cursive;font-size:clamp(20px,3.2vmin,29px);line-height:1.15;color:var(--sea)}
-.sign small{display:block;font-family:'Lora',serif;font-size:clamp(10px,1.35vmin,12px);color:var(--ink-soft);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em}
+.sign{margin-top:clamp(10px,2.1vmin,20px);font-family:'Caveat',cursive;font-size:clamp(20px,3.2vmin,29px);line-height:1.15;color:var(--coral-l)}
+.sign small{display:block;font-family:'Lora',serif;font-size:clamp(10px,1.35vmin,12px);color:var(--card-soft);letter-spacing:.14em;text-transform:uppercase;margin-bottom:.3em}
 
 /* ---------- KOØJET PÅ HØJRE SIDE ---------- */
 #right{align-items:center;justify-content:center}
@@ -334,15 +349,133 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
 }
 .sandpuff.go{animation:puff 1s ease-out forwards}
 @keyframes puff{0%{opacity:0;transform:translateX(-50%) scale(.25)}18%{opacity:.95}100%{opacity:0;transform:translateX(-50%) scale(1.6)}}
-.coin{position:absolute;z-index:5;border-radius:50%;background:linear-gradient(150deg,#ffe89a,#d8a63c);box-shadow:0 1px 3px rgba(0,0,0,.35);opacity:0;pointer-events:none}
-@keyframes coinfly{
-  0%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(.6)}
-  100%{opacity:0;transform:translate3d(var(--cx),var(--cy),0) rotate(var(--cr)) scale(1)}
+/* ============================================================
+   FEST — 12 sekunders fanfare i fire akter
+   ============================================================ */
+#fx{position:fixed;inset:0;z-index:7;pointer-events:none;overflow:hidden}
+#warm{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
+  background:linear-gradient(180deg, rgba(255,228,155,.42) 0%, rgba(255,196,95,.15) 45%, rgba(255,170,60,0) 78%);
+}
+#flash{
+  position:fixed;inset:0;z-index:9;pointer-events:none;opacity:0;
+  background:radial-gradient(circle at var(--fx,50%) var(--fy,78%),
+    rgba(255,246,212,.95) 0%, rgba(255,214,110,.45) 28%, rgba(255,200,80,0) 64%);
+}
+@keyframes fx-flash{0%{opacity:0}7%{opacity:1}100%{opacity:0}}
+@keyframes fx-warm{0%{opacity:0}14%{opacity:1}60%{opacity:.7}100%{opacity:0}}
+
+/* lysstråle op gennem vandet */
+.fx-ray{
+  position:fixed;pointer-events:none;z-index:6;transform-origin:50% 100%;filter:blur(7px);opacity:0;
+  background:linear-gradient(to top, rgba(255,231,163,.60) 0%, rgba(255,231,163,.20) 42%, rgba(255,231,163,0) 82%);
+  clip-path:polygon(44% 100%, 56% 100%, 100% 0%, 0% 0%);
+}
+@keyframes fx-ray{
+  0%  {opacity:0;   transform:translateX(-50%) scaleY(.06) scaleX(.5)}
+  12% {opacity:.95; transform:translateX(-50%) scaleY(1)   scaleX(.8)}
+  32% {opacity:.80; transform:translateX(-50%) scaleY(1)   scaleX(1.06)}
+  62% {opacity:.55; transform:translateX(-50%) scaleY(1)   scaleX(.92)}
+  100%{opacity:0;   transform:translateX(-50%) scaleY(1.04) scaleX(1.3)}
 }
 
-#burst{position:fixed;inset:0;z-index:6;pointer-events:none;overflow:hidden}
-.conf{position:absolute;width:9px;height:14px;border-radius:2px;opacity:0}
-@keyframes fly{0%{transform:translate3d(0,0,0) rotate(0);opacity:1}100%{transform:translate3d(var(--x),var(--y),0) rotate(var(--r));opacity:0}}
+/* chokbølger */
+.fx-ring{
+  position:fixed;border-radius:50%;pointer-events:none;z-index:6;opacity:0;
+  border:3px solid rgba(255,236,178,.9);
+  box-shadow:0 0 20px rgba(255,225,150,.5), 0 0 20px rgba(255,225,150,.3) inset;
+}
+@keyframes fx-ring{
+  0%{opacity:.9;transform:translate(-50%,-50%) scale(.05)}
+  65%{opacity:.32}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1)}
+}
+
+/* mønter i bue */
+.fx-coin{position:fixed;z-index:8;pointer-events:none;will-change:transform}
+.fx-coin .cy{width:100%;height:100%;will-change:transform}
+.fx-coin .cf{
+  width:100%;height:100%;border-radius:50%;
+  background:linear-gradient(150deg,#fff3c4 0%,#ffd76f 38%,#d8a63c 70%,#a9761f 100%);
+  box-shadow:0 1px 4px rgba(0,0,0,.4), 0 0 0 1px rgba(255,244,200,.55) inset;
+}
+@keyframes fx-cx{from{transform:translateX(0)}to{transform:translateX(var(--cx))}}
+@keyframes fx-cy{
+  0%  {transform:translateY(0);animation-timing-function:cubic-bezier(.12,.62,.32,1)}
+  40% {transform:translateY(var(--cup));animation-timing-function:cubic-bezier(.55,.05,.85,.5)}
+  100%{transform:translateY(var(--cdn))}
+}
+@keyframes fx-spin{
+  0%{transform:rotate(0) scaleX(1)}25%{transform:rotate(90deg) scaleX(.14)}
+  50%{transform:rotate(180deg) scaleX(1)}75%{transform:rotate(270deg) scaleX(.14)}
+  100%{transform:rotate(360deg) scaleX(1)}
+}
+@keyframes fx-fade{0%,68%{opacity:1}100%{opacity:0}}
+
+/* konfetti der daler som i vand */
+.fx-conf{position:fixed;z-index:8;pointer-events:none;will-change:transform}
+.fx-conf .cfy{width:100%;height:100%;will-change:transform}
+.fx-conf .cfi{display:block;width:100%;height:100%;border-radius:2px}
+@keyframes fx-cfx{from{transform:translateX(0)}to{transform:translateX(var(--x))}}
+@keyframes fx-cfy{
+  0%  {transform:translateY(0);animation-timing-function:cubic-bezier(.08,.72,.3,1)}
+  30% {transform:translateY(var(--yup));animation-timing-function:linear}
+  100%{transform:translateY(var(--ydn))}
+}
+@keyframes fx-flut{
+  0%{transform:rotate(var(--r0)) scaleX(1)}
+  50%{transform:rotate(var(--r1)) scaleX(-.35)}
+  100%{transform:rotate(var(--r0)) scaleX(1)}
+}
+
+/* glimt */
+.fx-spark{
+  position:fixed;z-index:8;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#fffdf2 0%, #ffe9a8 42%, rgba(255,220,130,0) 72%);
+  clip-path:polygon(50% 0%,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0% 50%,40% 40%);
+}
+@keyframes fx-twinkle{0%,100%{opacity:0;transform:scale(.2) rotate(0)}45%{opacity:1;transform:scale(1) rotate(70deg)}}
+
+/* dyrene jubler */
+.bob.cheer{animation:fx-cheer 1.15s cubic-bezier(.25,.9,.3,1) !important}
+@keyframes fx-cheer{
+  0%  {transform:translateY(0) rotate(0) scale(1)}
+  22% {transform:translateY(-30px) rotate(-9deg) scale(1.16)}
+  48% {transform:translateY(6px) rotate(7deg) scale(.95)}
+  70% {transform:translateY(-14px) rotate(-5deg) scale(1.07)}
+  88% {transform:translateY(3px) rotate(3deg) scale(.99)}
+  100%{transform:translateY(0) rotate(0) scale(1)}
+}
+
+/* kisten fejrer med */
+#chest.party{animation:fx-chestparty 12s ease-out}
+@keyframes fx-chestparty{
+  0%  {transform:translateX(-50%) scale(1)}
+  2%  {transform:translateX(-50%) scale(1.18)}
+  5%  {transform:translateX(-50%) scale(.97)}
+  8%  {transform:translateX(-50%) scale(1.06)}
+  12% {transform:translateX(-50%) scale(1)}
+  28% {transform:translateX(-50%) scale(1.04)}
+  34% {transform:translateX(-50%) scale(1)}
+  50% {transform:translateX(-50%) scale(1.16)}
+  56% {transform:translateX(-50%) scale(.99)}
+  61% {transform:translateX(-50%) scale(1.07)}
+  68% {transform:translateX(-50%) scale(1)}
+  82% {transform:translateX(-50%) scale(1.03)}
+  100%{transform:translateX(-50%) scale(1)}
+}
+#chest.party .chest-glow{animation:fx-glowburst 12s ease-out !important}
+@keyframes fx-glowburst{
+  0%{opacity:1;transform:scale(1)}
+  4%{opacity:1;transform:scale(2.6)}
+  14%{opacity:.85;transform:scale(1.4)}
+  30%{opacity:1;transform:scale(1.8)}
+  44%{opacity:.85;transform:scale(1.4)}
+  52%{opacity:1;transform:scale(2.8)}
+  66%{opacity:.9;transform:scale(1.6)}
+  84%{opacity:1;transform:scale(2.0)}
+  100%{opacity:1;transform:scale(1.5)}
+}
 
 /* ============================================================
    OVERLAYS
@@ -355,8 +488,8 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
 }
 .overlay.show{opacity:1;visibility:visible}
 .sheet{
-  width:min(560px,100%);max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  background:linear-gradient(155deg,var(--paper) 0%, var(--paper2) 100%);
+  width:min(600px,100%);max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  background:linear-gradient(155deg,var(--card1) 0%, var(--card2) 100%);
   border-radius:16px;padding:clamp(18px,3.4vmin,34px);
   box-shadow:0 30px 60px -18px rgba(2,26,44,.65), 0 0 0 1px rgba(200,151,63,.35);
   transform:translateY(14px) scale(.97);transition:transform .45s cubic-bezier(.2,.9,.3,1);text-align:center;
@@ -364,49 +497,83 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
 .overlay.show .sheet{transform:none}
 .sheet.shake{animation:shake .5s}
 @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-.q-top{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:clamp(8px,1.6vmin,16px)}
-.dot{width:9px;height:9px;border-radius:50%;background:rgba(13,126,163,.22);transition:background .3s,transform .3s}
-.dot.done{background:var(--gold);transform:scale(1.15)}
-.dot.now{background:var(--sea)}
-.q-text{font-family:'Playfair Display',Georgia,serif;font-size:clamp(17px,2.7vmin,25px);line-height:1.3;color:var(--deep2);margin:0 0 clamp(12px,2.2vmin,22px)}
+.q-num{
+  font-size:clamp(10px,1.5vmin,12px);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--card-soft);margin-bottom:clamp(8px,1.6vmin,16px);
+}
+.q-text{font-family:'Playfair Display',Georgia,serif;font-size:clamp(17px,2.7vmin,25px);line-height:1.3;color:var(--creme);margin:0 0 clamp(12px,2.2vmin,22px)}
 .opts{display:grid;gap:9px}
 .opt{
   font-family:'Lora',serif;font-size:clamp(14px,1.95vmin,17px);text-align:left;
   padding:clamp(12px,1.9vmin,17px) 16px;border-radius:11px;
-  border:1.5px solid rgba(13,126,163,.28);background:rgba(255,255,255,.62);color:var(--ink);
-  cursor:pointer;transition:transform .12s, background .2s, border-color .2s;line-height:1.35;
+  border:1.5px solid rgba(63,198,221,.26);background:rgba(255,255,255,.06);color:var(--card-ink);
+  cursor:pointer;transition:transform .12s, background .2s, border-color .2s, opacity .2s;line-height:1.35;
 }
 .opt:active{transform:scale(.985)}
-.opt.wrong{border-color:rgba(226,112,90,.75);background:rgba(226,112,90,.12);color:#b8452f}
-.opt.right{border-color:var(--gold);background:rgba(200,151,63,.16)}
-.hint-line{min-height:1.4em;margin-top:clamp(10px,1.8vmin,16px);font-family:'Caveat',cursive;font-size:clamp(16px,2.3vmin,21px);color:#b8452f;opacity:0;transition:opacity .3s}
-.hint-line.show{opacity:1}
-.q-foot{margin-top:clamp(10px,1.8vmin,16px);font-size:clamp(11px,1.5vmin,13px);color:var(--ink-soft)}
-.linkish{background:none;border:0;color:var(--sea);text-decoration:underline;cursor:pointer;font:inherit;padding:4px}
+.opt:disabled{cursor:default;opacity:.42}
+.opt.wrong{border-color:rgba(226,112,90,.85);background:rgba(226,112,90,.18);color:#ffb3a0}
+.opt.right,.opt.right:disabled{border-color:var(--gold-light);background:rgba(232,198,106,.18);color:#ffe9b8;opacity:1}
+
+/* frem og tilbage mellem spørgsmålene */
+.q-nav{margin-top:clamp(12px,2vmin,20px);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.navbtn{
+  font-family:'Lora',serif;font-size:clamp(12.5px,1.7vmin,14.5px);
+  padding:9px 18px;border-radius:999px;cursor:pointer;
+  border:1.5px solid var(--gold-soft);background:rgba(232,198,106,.08);color:var(--card-ink);
+  transition:background .2s, transform .12s, opacity .2s;
+}
+.navbtn:active{transform:scale(.97)}
+.navbtn:disabled{opacity:.25;cursor:default}
+
+/* pop-up med fun-fact efter et rigtigt svar */
+#faktaOverlay{z-index:70}
+.fakta-ic{
+  width:clamp(42px,6vmin,58px);height:clamp(42px,6vmin,58px);margin:0 auto clamp(8px,1.4vmin,14px);
+  border-radius:50%;display:grid;place-items:center;color:#2a1c02;
+  background:linear-gradient(150deg,#ffe89a 0%, var(--gold) 100%);
+  box-shadow:0 6px 16px -5px rgba(2,26,44,.6);
+}
+.fakta-ic svg{width:56%;height:56%}
+.fakta-h{
+  font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(19px,3vmin,28px);
+  color:var(--gold-light);margin:0 0 clamp(8px,1.4vmin,14px);letter-spacing:.02em;
+}
+.fakta-p{
+  font-size:clamp(13px,1.85vmin,16px);line-height:1.55;color:var(--card-ink);
+  margin:0;text-align:left;
+}
+.btn-guld{border-color:var(--gold-soft);background:rgba(232,198,106,.14);color:var(--creme)}
 
 #voucherOverlay .sheet{width:min(620px,100%);padding:0;overflow:hidden;background:none;box-shadow:none}
 .voucher{
-  position:relative;background:linear-gradient(155deg,#fefaf1 0%, var(--paper2) 60%, #f0e2c6 100%);
+  position:relative;background:linear-gradient(155deg,var(--card1) 0%, var(--card2) 60%, var(--card3) 100%);
   border-radius:16px;padding:clamp(20px,3.6vmin,38px) clamp(18px,3.4vmin,36px);
   box-shadow:0 30px 60px -18px rgba(2,26,44,.7);
   transform:scale(.8) rotate(-3deg);opacity:0;
   transition:transform .8s cubic-bezier(.18,1.1,.35,1), opacity .5s;
 }
 #voucherOverlay.show .voucher{transform:none;opacity:1}
-.voucher::before{content:"";position:absolute;inset:9px;border-radius:9px;border:1.5px solid rgba(200,151,63,.55);box-shadow:0 0 0 4px rgba(200,151,63,.12) inset;pointer-events:none}
-.v-crest{color:var(--gold);display:flex;justify-content:center;margin-bottom:6px}
+/* efter fanfaren stiger kortet langsomt op nedefra (10 → 12 sek.) */
+#voucherOverlay.slow{transition:opacity 1.9s ease, visibility 1.9s}
+#voucherOverlay.slow .voucher{
+  transform:translateY(80px) scale(.84) rotate(-2deg);
+  transition:transform 2.1s cubic-bezier(.16,.86,.24,1), opacity 1.9s ease;
+}
+#voucherOverlay.slow.show .voucher{transform:none;opacity:1}
+.voucher::before{content:"";position:absolute;inset:9px;border-radius:9px;border:1.5px solid rgba(232,198,106,.55);box-shadow:0 0 0 4px rgba(232,198,106,.10) inset;pointer-events:none}
+.v-crest{color:var(--gold-light);display:flex;justify-content:center;margin-bottom:6px}
 .v-crest svg{width:clamp(34px,5vmin,50px);height:clamp(34px,5vmin,50px)}
-.v-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(19px,3.1vmin,29px);letter-spacing:.22em;text-transform:uppercase;color:var(--deep2);margin:0 0 4px}
-.v-sub{font-size:clamp(11px,1.55vmin,13px);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:clamp(14px,2.4vmin,24px)}
+.v-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(19px,3.1vmin,29px);letter-spacing:.22em;text-transform:uppercase;color:var(--creme);margin:0 0 4px}
+.v-sub{font-size:clamp(11px,1.55vmin,13px);letter-spacing:.2em;text-transform:uppercase;color:var(--card-soft);margin-bottom:clamp(14px,2.4vmin,24px)}
 .v-items{display:grid;gap:clamp(9px,1.6vmin,14px);text-align:left}
-.v-item{display:flex;gap:clamp(11px,1.9vmin,17px);align-items:center;background:rgba(255,255,255,.62);border:1px solid rgba(200,151,63,.32);border-radius:12px;padding:clamp(12px,2vmin,18px)}
-.v-ic{flex:0 0 auto;width:clamp(38px,5.6vmin,54px);height:clamp(38px,5.6vmin,54px);border-radius:50%;display:grid;place-items:center;color:var(--paper);background:linear-gradient(150deg,var(--sea) 0%, var(--deep2) 100%);box-shadow:0 5px 12px -4px rgba(2,26,44,.45)}
+.v-item{display:flex;gap:clamp(11px,1.9vmin,17px);align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(232,198,106,.30);border-radius:12px;padding:clamp(12px,2vmin,18px)}
+.v-ic{flex:0 0 auto;width:clamp(38px,5.6vmin,54px);height:clamp(38px,5.6vmin,54px);border-radius:50%;display:grid;place-items:center;color:var(--card3);background:linear-gradient(150deg,#ffe89a 0%, var(--gold) 100%);box-shadow:0 5px 12px -4px rgba(2,26,44,.55)}
 .v-ic svg{width:56%;height:56%}
-.v-h{font-family:'Playfair Display',serif;font-size:clamp(15.5px,2.3vmin,21px);color:var(--deep2);line-height:1.2}
-.v-p{font-size:clamp(12px,1.7vmin,14.5px);color:var(--ink-soft);margin-top:3px;line-height:1.35}
-.v-foot{margin-top:clamp(14px,2.4vmin,24px);padding-top:clamp(11px,1.9vmin,18px);border-top:1px dashed rgba(200,151,63,.5);display:flex;justify-content:space-between;gap:14px;align-items:flex-end}
-.v-to{text-align:left;font-size:clamp(10px,1.4vmin,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);min-width:0}
-.v-to b{display:block;font-family:'Caveat',cursive;font-size:clamp(19px,2.7vmin,26px);letter-spacing:0;text-transform:none;color:var(--sea);font-weight:700;line-height:1.15}
+.v-h{font-family:'Playfair Display',serif;font-size:clamp(15.5px,2.3vmin,21px);color:#ffe9b8;line-height:1.2}
+.v-p{font-size:clamp(12px,1.7vmin,14.5px);color:var(--card-soft);margin-top:3px;line-height:1.35}
+.v-foot{margin-top:clamp(14px,2.4vmin,24px);padding-top:clamp(11px,1.9vmin,18px);border-top:1px dashed rgba(232,198,106,.45);display:flex;justify-content:space-between;gap:14px;align-items:flex-end}
+.v-to{text-align:left;font-size:clamp(10px,1.4vmin,12px);letter-spacing:.16em;text-transform:uppercase;color:var(--card-soft);min-width:0}
+.v-to b{display:block;font-family:'Caveat',cursive;font-size:clamp(19px,2.7vmin,26px);letter-spacing:0;text-transform:none;color:var(--coral-l);font-weight:700;line-height:1.15}
 .closebar{margin-top:clamp(12px,2vmin,20px);display:flex;justify-content:center}
 .btn{font-family:'Lora',serif;font-size:clamp(13px,1.8vmin,15px);padding:11px 26px;border-radius:999px;cursor:pointer;border:1.5px solid rgba(253,247,234,.6);background:rgba(253,247,234,.14);color:var(--paper);transition:background .2s, transform .12s}
 .btn:active{transform:scale(.97)}
@@ -425,7 +592,7 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
    ============================================================ */
 @media (orientation:portrait){
   #stage{padding-bottom:min(23vh,210px)}
-  #book{width:min(94vw,600px);height:min(56vh,520px)}
+  #book{width:min(94vw,600px);height:min(50vh,460px)}
   #zoomer{transform:scale(.68)}
   #cover{transform-origin:center top}
   #book.open #cover{transform:rotateX(166deg)}
@@ -442,7 +609,7 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
 }
 @media (orientation:portrait) and (max-height:740px){
   #stage{padding-bottom:min(21vh,170px)}
-  #book{height:min(52vh,440px)}
+  #book{height:min(46vh,390px)}
   .page{padding:clamp(16px,4vw,24px)}
 }
 @media (prefers-reduced-motion:reduce){
@@ -882,16 +1049,30 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
   <div class="sandpuff" id="sandpuff"></div>
 </button>
 
-<div id="burst"></div>
-
 <!-- QUIZ -->
 <div class="overlay" id="quizOverlay">
   <div class="sheet" id="quizSheet">
-    <div class="q-top" id="qDots"></div>
+    <div class="q-num" id="qNum"></div>
     <p class="q-text" id="qText"></p>
     <div class="opts" id="qOpts"></div>
-    <div class="hint-line" id="qHint"></div>
-    <div class="q-foot"><button class="linkish" id="qSkip" hidden>Spring over — kisten er din alligevel</button></div>
+    <div class="q-nav">
+      <button class="navbtn" type="button" id="qPrev">&larr; Forrige</button>
+      <button class="navbtn" type="button" id="qNext">Næste &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- FUN FACT EFTER ET RIGTIGT SVAR -->
+<div class="overlay" id="faktaOverlay">
+  <div class="sheet">
+    <div class="fakta-ic">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12.5 9.5 18 20 6.5"/>
+      </svg>
+    </div>
+    <h3 class="fakta-h" id="faktaH">Rigtigt!</h3>
+    <p class="fakta-p" id="faktaText"></p>
+    <div class="closebar"><button class="btn btn-guld" id="faktaNext">Næste spørgsmål</button></div>
   </div>
 </div>
 
@@ -917,18 +1098,27 @@ h1 .navn{display:block;color:var(--sea);font-style:italic}
    ALT TEKST SAMLET ÉT STED
    ============================================================= */
 const CONFIG = {
-  navn: "Kirsten",
-  overskrift: "Tillykke med dagen",
+  navn: "Kirsten og Henrik",
+  overskrift: "Tillykke",
 
+  /* verset — én linje pr. element */
   hilsen: [
-    "Vi ledte længe efter noget, der kunne svømme, vrikke med halen eller vrinske. Desværre kræver den slags både foder, forsikring og en samtale med kommunen.",
-    "Så vi fandt noget andet. Det skal hverken luftes eller fodres — det skal bare bruges. Helst sammen med nogen du holder af."
+    "Fra David og Julie – her er en gave,",
+    "men uden svar kan I den ikke have!",
+    "Så tænk jer godt om, og svar på det hele,",
+    "for kun med rette svar kan I den dele."
   ],
   afsenderLinje: "Kærlig hilsen",
   afsender: "David og Julie",
 
   forsideHint: "Hold fingeren på seglet",
 
+  /* knapperne i fun-fact-pop-up'en */
+  naesteKnap: "Næste spørgsmål",
+  sidsteKnap: "Åbn kisten",
+  rigtigOverskrift: "Rigtigt!",
+
+  /* Søhesten står først, skattekisten sidst — det sidste spørgsmål åbner kisten. */
   quiz: [
     {
       q: "Søhesten er kendt for én ret usædvanlig ting. Hvilken?",
@@ -938,34 +1128,344 @@ const CONFIG = {
         { t: "Den sover stående", ok: false },
         { t: "Den skifter farve, når den bliver flov", ok: false }
       ],
-      hint: "Tænk på, hvem der har den hårdeste tørn i søhestefamilien."
+      fakta: "Hos søheste er det hannen, der bærer æggene i en brudepose på maven, indtil de klækkes og de små søheste \"fødes\". Hunnen lægger æggene direkte i hannens pose under parringen, hvorefter han befrugter og bærer dem i typisk 2-4 uger."
     },
     {
-      q: "Hvad hedder den grævlingejagende hund, der ligner en pølse?",
+      q: "Hvor gammel var den ældste spiselige honning, arkæologer har fundet i en egyptisk grav?",
       svar: [
-        { t: "Gravhund", ok: true },
-        { t: "Sofahund", ok: false },
-        { t: "Tæppehund", ok: false },
-        { t: "Undervandshund", ok: false }
+        { t: "100 år", ok: false },
+        { t: "500 år", ok: false },
+        { t: "1.000 år", ok: false },
+        { t: "Over 3.000 år", ok: true }
       ],
-      hint: "Den graver. Deraf navnet."
+      fakta: "Honning indeholder næsten intet vand og er meget surt, hvilket gør det umuligt for bakterier og skimmelsvamp at overleve i det — derfor kan det i praksis holde evigt, hvis det opbevares korrekt."
     },
     {
-      q: "Hvor stor en del af sofaen har en gravhund brug for?",
+      q: "Hvor mange hjerter har en blæksprutte?",
       svar: [
-        { t: "Det hele", ok: true },
-        { t: "En fjerdedel", ok: false },
-        { t: "Kun hjørnet", ok: false },
-        { t: "Den foretrækker gulvet", ok: false }
+        { t: "1", ok: false },
+        { t: "2", ok: false },
+        { t: "3", ok: true },
+        { t: "4", ok: false }
       ],
-      hint: "Vær nu realistisk."
+      fakta: "To hjerter pumper blod til gællerne, mens det tredje pumper blod rundt til resten af kroppen. Blækspruttens blod er desuden blåt, fordi det bruger kobber i stedet for jern til at transportere ilt."
+    },
+    {
+      q: "Botanisk set, hvilken af disse er reelt en bær?",
+      svar: [
+        { t: "Jordbær", ok: false },
+        { t: "Banan", ok: true },
+        { t: "Hindbær", ok: false },
+        { t: "Brombær", ok: false }
+      ],
+      fakta: "Botanisk defineres en bær som en frugt, der udvikler sig fra én blomst med én frugtknude og har frø indeni kødet. Bananer opfylder det krav, mens jordbær, hindbær og brombær faktisk er \"samlefrugter\" bestående af mange små delfrugter."
+    },
+    {
+      q: "Hvilken planet har en dag, der er længere end dens eget år?",
+      svar: [
+        { t: "Merkur", ok: false },
+        { t: "Venus", ok: true },
+        { t: "Mars", ok: false },
+        { t: "Jupiter", ok: false }
+      ],
+      fakta: "Venus roterer ekstremt langsomt om sin egen akse (én rotation tager ca. 243 jorddøgn), mens den kun bruger ca. 225 jorddøgn på at kredse om Solen. Det giver den paradoksale situation, at et \"år\" på Venus er kortere end en \"dag\"."
+    },
+    {
+      q: "Hvor længe varede verdens korteste krig, Anglo-Zanzibar-krigen i 1896?",
+      svar: [
+        { t: "38 minutter", ok: true },
+        { t: "3 timer", ok: false },
+        { t: "1 dag", ok: false },
+        { t: "1 uge", ok: false }
+      ],
+      fakta: "Krigen mellem Storbritannien og Sultanatet Zanzibar brød ud, fordi en ny sultan tog magten uden britisk godkendelse. Britiske krigsskibe bombarderede paladset, og sultanen overgav sig efter under en time."
+    },
+    {
+      q: "Hvilket dyr har terningeformet afføring?",
+      svar: [
+        { t: "Panda", ok: false },
+        { t: "Wombat", ok: true },
+        { t: "Koala", ok: false },
+        { t: "Kænguru", ok: false }
+      ],
+      fakta: "Forskere har fundet ud af, at wombattens tarme har områder med forskellig elasticitet, som former afføringen til kubiske klumper. Man tror, det er en fordel, fordi terningerne ikke ruller væk, når wombatten markerer territorium med dem."
+    },
+    {
+      q: "Hvor ofte fornyer din mavesæk sin indre slimhinde, fordi mavesyren ellers ville æde den selv?",
+      svar: [
+        { t: "Hver time", ok: false },
+        { t: "Hver 3.-4. dag", ok: true },
+        { t: "Hver måned", ok: false },
+        { t: "Den fornyes aldrig", ok: false }
+      ],
+      fakta: "Mavesyre er stærk nok til at opløse metal, så mavesækken beskytter sig selv med et tykt slimlag og ved konstant at udskifte sine celler. Uden den fornyelse ville mavesækken bogstaveligt talt fordøje sig selv."
+    },
+    {
+      q: "Hvad er ældst?",
+      svar: [
+        { t: "Hajer", ok: true },
+        { t: "Træer", ok: false },
+        { t: "De opstod samtidig", ok: false },
+        { t: "Dinosaurer", ok: false }
+      ],
+      fakta: "Hajer har eksisteret i omkring 400 millioner år, mens de første træagtige planter (som Archaeopteris) først dukkede op for ca. 350 millioner år siden. Det betyder, at hajer er ældre end træer."
+    },
+    {
+      q: "Hvilket land har enhjørningen som sit officielle nationaldyr?",
+      svar: [
+        { t: "Wales", ok: false },
+        { t: "Irland", ok: false },
+        { t: "Skotland", ok: true },
+        { t: "England", ok: false }
+      ],
+      fakta: "Enhjørningen har i århundreder symboliseret renhed, styrke og det utæmmelige i skotsk heraldik, og optræder på det kongelige skotske våbenskjold sammen med løven, som repræsenterer England."
+    },
+    {
+      q: "Hvor mange liter spyt producerer et menneske i gennemsnit på en dag?",
+      svar: [
+        { t: "Ca. 0,5 liter", ok: false },
+        { t: "Ca. 1,5 liter", ok: true },
+        { t: "Ca. 3 liter", ok: false },
+        { t: "Ca. 5 liter", ok: false }
+      ],
+      fakta: "De fleste mennesker producerer omkring 1-1,5 liter spyt om dagen, uden at tænke over det. Spyt indeholder enzymer, der begynder nedbrydningen af mad allerede i munden, og hjælper desuden med at beskytte tænderne mod bakterier og syre."
+    },
+    {
+      q: "Hvad er tættest på i tid?",
+      svar: [
+        { t: "Cleopatra levede tættere på månelandingen end på pyramidens opførelse", ok: true },
+        { t: "Pyramidens opførelse var tættere på Cleopatra", ok: false },
+        { t: "De faldt tidsmæssigt sammen", ok: false },
+        { t: "Pyramiden blev bygget efter Cleopatra", ok: false }
+      ],
+      fakta: "Den Store Pyramide i Giza blev bygget omkring 2560 f.Kr., mens Cleopatra levede omkring 30 f.Kr. — altså ca. 2.500 år senere. Månelandingen i 1969 ligger kun ca. 2.000 år efter Cleopatra."
+    },
+    {
+      q: "Hvad kaldes en flok krager på engelsk?",
+      svar: [
+        { t: "A parliament", ok: false },
+        { t: "A murder", ok: true },
+        { t: "A flock", ok: false },
+        { t: "A congress", ok: false }
+      ],
+      fakta: "Udtrykket \"a murder of crows\" stammer formentlig fra gamle folkesagn og overtro om, at krager kunne \"dømme\" og henrette et af deres egne, eller fra deres association med død og slagmarker."
+    },
+    {
+      q: "Kan honningbier genkende menneskeansigter?",
+      svar: [
+        { t: "Ja, forskning viser de kan", ok: true },
+        { t: "Nej, det er en myte", ok: false },
+        { t: "Kun dronningebier kan", ok: false },
+        { t: "Kun hvis ansigtet er gult", ok: false }
+      ],
+      fakta: "Studier har vist, at honningbier kan lære at genkende og skelne mellem menneskeansigter ved at bruge samme type \"configural processing\", som mennesker selv bruger — på trods af at deres hjerne kun vejer en brøkdel af et gram."
+    },
+    {
+      q: "Hvorfor kan Eiffeltårnet blive op til 15 cm højere om sommeren?",
+      svar: [
+        { t: "Flere turister presser det opad", ok: false },
+        { t: "Metallet udvider sig i varmen", ok: true },
+        { t: "Det er en myte", ok: false },
+        { t: "Nye antenner bliver monteret", ok: false }
+      ],
+      fakta: "Tårnet er bygget af jern, som udvider sig, når det opvarmes. Om sommeren kan solvarmen få tårnet til at vokse op mod 15 cm og endda gøre, at det hælder let væk fra solsiden."
+    },
+    {
+      q: "Hvilken frugt er let radioaktiv på grund af sit indhold af kalium-40?",
+      svar: [
+        { t: "Æble", ok: false },
+        { t: "Banan", ok: true },
+        { t: "Appelsin", ok: false },
+        { t: "Vindrue", ok: false }
+      ],
+      fakta: "Bananer indeholder relativt meget kalium, hvoraf en lille del er den radioaktive isotop kalium-40. Strålingen er dog så minimal, at man skulle spise millioner af bananer på én gang for at få nogen målbar sundhedsskadelig effekt."
+    },
+    {
+      q: "Hvad er ældst?",
+      svar: [
+        { t: "Oxford Universitet", ok: true },
+        { t: "Aztekerriget", ok: false },
+        { t: "De opstod samtidig", ok: false },
+        { t: "Man kan ikke sige det med sikkerhed", ok: false }
+      ],
+      fakta: "Oxford Universitet menes at have haft undervisning siden omkring år 1096, mens Aztekerriget først blev grundlagt i 1428 med byen Tenochtitlan som hovedstad."
+    },
+    {
+      q: "Hvad er en \"jiffy\" inden for fysik?",
+      svar: [
+        { t: "Et slangudtryk uden reel betydning", ok: false },
+        { t: "En officiel tidsenhed (ca. 1/100 sekund)", ok: true },
+        { t: "En måleenhed for lys", ok: false },
+        { t: "Et gammelt ord for et minut", ok: false }
+      ],
+      fakta: "I fysik bruges \"jiffy\" undertiden som betegnelse for den tid, det tager lys at bevæge sig én centimeter i vacuum — svarende til ca. 33,3 pikosekunder — men i mere populær forstand bruges ordet også om ca. 1/100 sekund."
+    },
+    {
+      q: "Hvad siger astronauter, at rummet lugter af, når de tager rumdragten af efter en rumvandring?",
+      svar: [
+        { t: "Ingenting, rummet lugter ikke", ok: false },
+        { t: "Brændt bøf/svejsning", ok: true },
+        { t: "Blomster", ok: false },
+        { t: "Klor", ok: false }
+      ],
+      fakta: "Flere astronauter har beskrevet en metallisk, brændt lugt, der minder om svejsning eller stegt bøf, som hænger fast på rumdragter og udstyr efter en rumvandring — formentlig fra højenergetiske atomer, der reagerer med materialer, når de kommer i kontakt med ilt igen."
+    },
+    {
+      q: "Kan heste kaste op?",
+      svar: [
+        { t: "Ja, ligesom mennesker", ok: false },
+        { t: "Nej, det er fysisk umuligt for dem", ok: true },
+        { t: "Kun føl kan", ok: false },
+        { t: "Kun hvis de er syge", ok: false }
+      ],
+      fakta: "Heste har en meget stærk muskel (esophageal sphincter), hvor spiserøret møder mavesækken, som kun lader mad gå én vej. Det er en af grundene til, at hestekolik kan være så farligt — de kan ikke lette trykket ved at kaste op."
+    },
+    {
+      q: "Hvad bruger delfiner deres \"signaturfløjt\" til?",
+      svar: [
+        { t: "At navigere", ok: false },
+        { t: "At kalde hinanden ved \"navn\"", ok: true },
+        { t: "At advare mod hajer", ok: false },
+        { t: "At tiltrække en partner", ok: false }
+      ],
+      fakta: "Hver delfin udvikler sin egen unikke fløjtelyd tidligt i livet, som fungerer lidt som et navn. Andre delfiner i gruppen kan genkende og efterligne denne lyd for at \"kalde\" på den bestemte delfin."
+    },
+    {
+      q: "Hvilket land producerer flest tomater i verden?",
+      svar: [
+        { t: "Italien", ok: false },
+        { t: "Kina", ok: true },
+        { t: "USA", ok: false },
+        { t: "Danmark – naturligvis, når man tager hobbydyrkerne med", ok: false }
+      ],
+      fakta: "Kina producerer suverænt flest tomater i verden, langt foran lande som Indien, Tyrkiet og USA. Italien er kendt for sine tomatprodukter og eksport, men ligger slet ikke i nærheden af toppen målt på selve produktionsmængden."
+    },
+    {
+      q: "Hvor mange tænder har en voksen hest typisk?",
+      svar: [
+        { t: "20–24", ok: false },
+        { t: "28–32", ok: false },
+        { t: "36–44", ok: true },
+        { t: "50–54", ok: false }
+      ],
+      fakta: "Antallet varierer, fordi hopper ofte mangler eller kun har rudimentære hjørnetænder, mens hingste og vallakker typisk har det fulde sæt. Dyrlæger og hestefolk kan desuden bruge tændernes form og slid til at vurdere hestens alder ret præcist — deraf udtrykket \"man skal ikke se en given hest i munden\"."
+    },
+    {
+      q: "Hvilket format indeholder typisk flest rå billeddata?",
+      svar: [
+        { t: "JPEG", ok: false },
+        { t: "GIF", ok: false },
+        { t: "RAW", ok: true },
+        { t: "PNG", ok: false }
+      ],
+      fakta: "RAW-filer indeholder ubehandlet data direkte fra kameraets sensor, uden komprimering eller intern billedbehandling. Det giver fotografen langt større frihed til at justere hvidbalance, eksponering og farver bagefter, sammenlignet med JPEG, som allerede er komprimeret og \"færdigbehandlet\" i kameraet."
+    },
+    {
+      q: "Hvilken egenskab er gravhunden især kendt for?",
+      svar: [
+        { t: "At være ekstremt lydig", ok: false },
+        { t: "At være stædig og modig", ok: true },
+        { t: "At være meget stille", ok: false },
+        { t: "At være dårlig til at grave", ok: false }
+      ],
+      fakta: "Gravhunden blev oprindeligt avlet i Tyskland til at jage grævlinger under jorden — et arbejde, der krævede stort mod til at konfrontere et dyr, som kunne være lige så stort som hunden selv, i en snæver, mørk gang."
+    },
+    {
+      q: "Hvad er en tomat botanisk set?",
+      svar: [
+        { t: "En grøntsag", ok: false },
+        { t: "Et bær", ok: true },
+        { t: "En meget våd kartoffel", ok: false },
+        { t: "Naturens svar på en tennisbold", ok: false }
+      ],
+      fakta: "Botanisk set er tomaten et bær, fordi den udvikler sig fra én blomst med én frugtknude og har frø i kødet — ligesom druer og bananer. Alligevel afgjorde den amerikanske højesteret i 1893 (sagen Nix v. Hedden), at tomaten juridisk skulle behandles som en grøntsag ud fra almindelig sprogbrug og toldregler."
+    },
+    {
+      q: "Hvilken af disse er en dansk hesterace?",
+      svar: [
+        { t: "Frederiksborger", ok: true },
+        { t: "Københavner", ok: false },
+        { t: "Jysk Taxahest", ok: false },
+        { t: "Dansk Varmblod – altså den eneste der har læst manualen", ok: false }
+      ],
+      fakta: "Frederiksborgeren er Danmarks ældste hesterace og en af verdens ældste kulturracer, grundlagt i 1562 af Frederik II på Frederiksborg Slot. Den var oprindeligt en prestigefyldt kongelig ridehest, som blev eksporteret til fyrstehuse i hele Europa."
+    },
+    {
+      q: "Hvad hedder tomatens botaniske navn?",
+      svar: [
+        { t: "Solanum lycopersicum", ok: true },
+        { t: "Tomatus gigantus", ok: false },
+        { t: "Solanum rubrum", ok: false },
+        { t: "Pomodoro magnifico", ok: false }
+      ],
+      fakta: "Solanum lycopersicum tilhører natskyggefamilien (Solanaceae), som tomaten deler med både kartofler og aubergine — men også med de giftige planter bulmeurt og belladonna."
+    },
+    {
+      q: "Hvilken tomat er kendt for sin meget mørke farve?",
+      svar: [
+        { t: "Black Krim", ok: true },
+        { t: "Black Beauty", ok: false },
+        { t: "Dark Vader", ok: false },
+        { t: "Darth Tomato", ok: false }
+      ],
+      fakta: "Black Krim stammer oprindeligt fra Krim-halvøen ved Sortehavet og er en af de mest populære \"sorte\" heirloom-tomater, kendt for sin dybe mørkerøde/violette farve og sin røgede, salte smag."
+    },
+    {
+      q: "Hvor stort er hestens synsfelt cirka?",
+      svar: [
+        { t: "90 grader", ok: false },
+        { t: "180 grader", ok: false },
+        { t: "270 grader", ok: false },
+        { t: "Næsten 360 grader", ok: true }
+      ],
+      fakta: "Fordi hestens øjne sidder i siderne af hovedet, kan den se næsten hele vejen rundt med kun to små blinde vinkler — lige foran mulen og lige bag halen. Til gengæld har den kun et lille felt med skarpt binokulært (3D) syn direkte foran sig."
+    },
+    {
+      q: "Hvor længe kan en hest typisk sove i døgnet?",
+      svar: [
+        { t: "2–3 timer", ok: true },
+        { t: "5–7 timer", ok: false },
+        { t: "10–12 timer", ok: false },
+        { t: "15 timer", ok: false }
+      ],
+      fakta: "Heste sover kun 2-3 timer i døgnet og gør det for det meste stående, takket være en særlig \"låsemekanisme\" i benene. Dyb REM-søvn kræver dog, at de ligger ned, hvilket de typisk kun gør i korte perioder ad gangen."
+    },
+    {
+      q: "Hvornår blev det første digitale kamera udviklet?",
+      svar: [
+        { t: "1950'erne", ok: false },
+        { t: "1970'erne", ok: true },
+        { t: "1980'erne", ok: false },
+        { t: "1990'erne", ok: false }
+      ],
+      fakta: "Det første digitale kamera blev opfundet i 1975 af ingeniøren Steven Sasson hos Kodak. Det vejede knap 4 kg, tog sort/hvide billeder i 0,01 megapixel og brugte 23 sekunder på at gemme ét billede på et kassettebånd."
+    },
+    {
+      q: "Hvorfor er gravhundens brystkasse relativt stor?",
+      svar: [
+        { t: "For at give plads til store lunger/hjerte og understøtte arbejdet under jorden", ok: true },
+        { t: "For at holde den varm", ok: false },
+        { t: "For at kunne spise mere", ok: false },
+        { t: "For at den kan se ekstra farlig ud", ok: false }
+      ],
+      fakta: "Den brede brystkasse giver plads til kraftige lunger og et stærkt hjerte, som gør gravhunden i stand til at arbejde udholdende under jorden — selvom dens korte ben og lange krop primært er formet til at kunne bevæge sig gennem trange grævlingegange."
+    },
+    {
+      q: "Hvad er den videnskabeligt bedste metode til at åbne en aflåst skattekiste?",
+      svar: [
+        { t: "Banke tre gange og sige det magiske ord \"abrakadabra\"", ok: false },
+        { t: "Svare rigtigt på alle spørgsmålene i denne quiz", ok: true },
+        { t: "Ryste kisten kraftigt, indtil låsen giver op", ok: false },
+        { t: "Spørge kisten pænt, om den ikke vil åbne sig selv", ok: false }
+      ],
+      fakta: "Ifølge de nyeste (og eneste) videnskabelige undersøgelser er metode B den langt mest effektive – og faktisk den eneste, der virker på præcis denne kiste. Metode A, C og D er testet grundigt og har en succesrate på 0%."
     }
   ],
 
   gavekortUndertekst: "To ting, der hører sammen",
   gaver: [
     { ikon: "i-bed",    h: "1.500 kr. til Hørby Færgekro", p: "Til et ophold på kroen — spis godt og bliv natten over ved vandet." },
-    { ikon: "i-ticket", h: "2 × entré til Nyvang",          p: "Andelslandsbyen ligger få minutter fra kroen — oplagt dagen derpå." }
+    { ikon: "i-ticket", h: "2 × entré til Nyvang",          p: "Til en dag i gamle dage — gå på opdagelse mellem købmand, smedje og marker." }
   ],
   gavekortTil: "Kirsten og Henrik",
   gavekortFra: "David og Julie",
@@ -1012,10 +1512,58 @@ const Lyd = (() => {
     aabn(){ [0,.09,.18].forEach((d,i)=>tone(420 + i*130, 900 + i*160, .5, "triangle", .09, d)); },
     svirp(){ tone(700, 1500, .35, "sine", .06); },
     dunk(v){ tone(150, 55, .32, "sine", v || .16); noise(.28, (v || .16) / 2, 0, 320); },
-    rigtig(){ [523,659,784].forEach((f,i)=>tone(f, f, .34, "sine", .10, i*.075)); },
-    forkert(){ tone(240, 170, .3, "sine", .09); },
+    /* rigtigt svar — kort, festlig opadgående figur med et glimt ovenpå */
+    rigtig(){
+      [523,659,784,1047].forEach((f,i) => tone(f, f, .28, "triangle", .09, i*.055));
+      tone(1319, 1319, .40, "triangle", .060, .22);
+      tone(1568, 1568, .50, "sine",     .048, .29);
+      tone(2093, 2093, .55, "sine",     .030, .36);
+      noise(.22, .020, .24, 2800);
+    },
+    /* forkert svar — blødt "øv" der falder, med en boblet bund */
+    forkert(){
+      tone(440, 440, .12, "triangle", .075, 0);
+      tone(349, 330, .28, "triangle", .080, .11);
+      tone(165, 110, .30, "sine",     .050, .11);
+      noise(.16, .022, 0, 400);
+    },
     knirk(){ tone(320, 180, .5, "sawtooth", .04); },
-    fanfare(){ [523,659,784,1047,1319].forEach((f,i)=>tone(f, f, .7, "triangle", .10, i*.11)); noise(.7,.05,.1); },
+    /* 12 sekunder i fire akter — følger animationen */
+    fanfare(){
+      const T = (f,d,t,ty,v) => tone(f, f, d, ty || "triangle", v || .075, t);
+
+      /* AKT 1 (0,0s) — dunk og opadgående fanfare */
+      tone(120, 58, 1.8, "sine", .13, 0);
+      [523,659,784,1047,1319,1568].forEach((f,i) => T(f, .55, i*.10));
+      [523,659,784,1047].forEach(f => T(f, 2.0, .70, "sine", .05));
+      for (let i = 0; i < 16; i++) T(1047 + i*70, .30, 1.05 + i*.085, "triangle", .038);
+      [659,784,988,1319].forEach((f,i) => T(f, 1.8, 2.45 + i*.04, "sine", .055));
+
+      /* AKT 2 (3,4s) — svarfrase, lysere */
+      tone(98, 49, 1.6, "sine", .10, 3.4);
+      [784,880,1047,1175,1319].forEach((f,i) => T(f, .50, 3.45 + i*.13));
+      [698,880,1047,1397].forEach(f => T(f, 2.2, 4.15, "sine", .05));
+      for (let i = 0; i < 12; i++) T(1568 - i*60, .28, 4.60 + i*.09, "triangle", .035);
+
+      /* AKT 3 (6,0s) — klimaks */
+      tone(131, 65, 2.4, "sine", .14, 6.0);
+      [523,659,784,1047,1319,1568,2093].forEach((f,i) => T(f, .62, 6.0 + i*.09, "triangle", .085));
+      [523,659,784,1047,1319].forEach(f => T(f, 3.2, 6.75, "sine", .052));
+      for (let i = 0; i < 20; i++) T(1047 + i*90, .32, 6.90 + i*.075, "triangle", .035);
+      [784,988,1175,1568].forEach((f,i) => T(f, 2.4, 8.30 + i*.05, "sine", .048));
+
+      /* AKT 4 (9,2s) — lang, rolig slutakkord mens gavekortet stiger op */
+      tone(131, 131, 2.8, "sine", .085, 9.2);
+      [523,659,784,1047].forEach((f,i) => T(f, 2.9, 9.20 + i*.07, "sine", .05));
+      for (let i = 0; i < 10; i++) T(1319 + i*110, .50, 9.60 + i*.16, "sine", .026);
+      [1047,1319,1568].forEach((f,i) => T(f, 2.6, 10.40 + i*.06, "sine", .038));
+
+      /* støjskyl — bobler og skum */
+      noise(1.3, .045, .04, 650);
+      noise(1.0, .035, 3.45, 800);
+      noise(1.6, .050, 6.00, 600);
+      noise(1.2, .030, 9.30, 900);
+    },
     klik(){ tone(700, 500, .07, "sine", .06); }
   };
 })();
@@ -1264,124 +1812,313 @@ setTimeout(() => { if (!aabnet) hintEl.classList.add("show"); }, 2600);
    QUIZ
    ============================================================= */
 const quizOverlay = document.getElementById("quizOverlay");
-const quizSheet = document.getElementById("quizSheet");
-const qDots = document.getElementById("qDots");
-const qText = document.getElementById("qText");
-const qOpts = document.getElementById("qOpts");
-const qHint = document.getElementById("qHint");
-const qSkip = document.getElementById("qSkip");
+const quizSheet   = document.getElementById("quizSheet");
+const qNum   = document.getElementById("qNum");
+const qText  = document.getElementById("qText");
+const qOpts  = document.getElementById("qOpts");
+const qPrev  = document.getElementById("qPrev");
+const qNext  = document.getElementById("qNext");
 
-let qi = 0, forsoeg = 0, laastOp = false;
+const faktaOverlay = document.getElementById("faktaOverlay");
+const faktaH       = document.getElementById("faktaH");
+const faktaText    = document.getElementById("faktaText");
+const faktaNext    = document.getElementById("faktaNext");
 
-function tegnDots(){
-  qDots.innerHTML = CONFIG.quiz.map((_, i) =>
-    `<span class="dot ${i < qi ? "done" : i === qi ? "now" : ""}"></span>`).join("");
-}
+const ANTAL = CONFIG.quiz.length;
+const besvaret = new Array(ANTAL).fill(false);   /* husker hvad man har klaret */
+let qi = 0, laastOp = false;
+
+const erSidste = () => qi === ANTAL - 1;
+
 function visSpoergsmaal(){
   const q = CONFIG.quiz[qi];
-  tegnDots();
+  qNum.textContent = "Spørgsmål " + (qi + 1);
   qText.textContent = q.q;
-  qHint.classList.remove("show");
-  qSkip.hidden = true;
-  forsoeg = 0;
   qOpts.innerHTML = "";
   q.svar.forEach(s => {
     const b = document.createElement("button");
     b.className = "opt"; b.type = "button"; b.textContent = s.t;
-    b.addEventListener("click", () => svarKlik(b, s));
+    if (besvaret[qi]){
+      /* allerede klaret — svaret står markeret og kan ikke ændres */
+      b.disabled = true;
+      if (s.ok) b.classList.add("right");
+    } else {
+      b.addEventListener("click", () => svarKlik(b, s));
+    }
     qOpts.appendChild(b);
   });
+  qPrev.disabled = qi === 0;
+  qNext.disabled = erSidste();
+}
+function gaaTil(i){
+  qi = Math.max(0, Math.min(ANTAL - 1, i));
+  visSpoergsmaal();
 }
 function svarKlik(btn, s){
   Lyd.wake();
   if (s.ok){
     Lyd.rigtig();
     btn.classList.add("right");
-    qHint.classList.remove("show");
+    besvaret[qi] = true;
     [...qOpts.children].forEach(b => b.disabled = true);
-    setTimeout(() => {
-      qi++;
-      if (qi < CONFIG.quiz.length) visSpoergsmaal(); else laasOp();
-    }, 620);
+    setTimeout(visFakta, 520);
   } else {
     Lyd.forkert();
-    forsoeg++;
     btn.classList.add("wrong");
     setTimeout(() => btn.classList.remove("wrong"), 900);
     quizSheet.classList.remove("shake"); void quizSheet.offsetWidth; quizSheet.classList.add("shake");
-    qHint.textContent = CONFIG.quiz[qi].hint;
-    qHint.classList.add("show");
-    if (forsoeg >= 3) qSkip.hidden = false;
   }
 }
+function visFakta(){
+  faktaH.textContent = CONFIG.rigtigOverskrift;
+  faktaText.textContent = CONFIG.quiz[qi].fakta;
+  faktaNext.textContent = erSidste() ? CONFIG.sidsteKnap : CONFIG.naesteKnap;
+  faktaOverlay.classList.add("show");
+}
+
+/* knappen i pop-up'en: videre til næste spørgsmål — eller åbn kisten */
+faktaNext.addEventListener("click", () => {
+  Lyd.wake(); Lyd.klik();
+  faktaOverlay.classList.remove("show");
+  if (erSidste()) laasOp(); else gaaTil(qi + 1);
+});
+qPrev.addEventListener("click", () => { Lyd.klik(); gaaTil(qi - 1); });
+qNext.addEventListener("click", () => { Lyd.klik(); gaaTil(qi + 1); });
+
+/* det sidste spørgsmål åbner kisten — de øvrige behøver ikke være besvaret */
 function laasOp(){
   laastOp = true;
   quizOverlay.classList.remove("show");
+  faktaOverlay.classList.remove("show");
   chestInner.classList.remove("idle");
-  chest.classList.add("live","ready","opened");
+  chest.classList.add("live","opened");
+  chest.classList.remove("ready");           /* ingen klik midt i fanfaren */
   Lyd.knirk();
   setTimeout(() => chest.classList.add("lidback"), 170);
-  setTimeout(() => { Lyd.fanfare(); konfetti(); mønter(); }, 380);
-  for (let i = 0; i < 22; i++) setTimeout(spawnBubble, i * 40);
-  setTimeout(visGavekort, 1350);
+  setTimeout(() => { Lyd.fanfare(); FX.fest(); }, 380);
+  setTimeout(() => visGavekort(!reduced), reduced ? 1200 : 10380);
+  setTimeout(() => chest.classList.add("ready"), reduced ? 1600 : 12600);
 }
-qSkip.addEventListener("click", () => { Lyd.klik(); laasOp(); });
 
 chest.addEventListener("click", () => {
   Lyd.wake(); Lyd.klik();
-  if (laastOp) { visGavekort(); return; }
-  qi = 0; visSpoergsmaal();
+  if (laastOp) { visGavekort(false); return; }
+  visSpoergsmaal();                          /* genoptager hvor man kom fra */
   quizOverlay.classList.add("show");
 });
 
 /* =============================================================
-   MØNTER OG KONFETTI
+   FESTEN — 12 sekunder i fire akter.
+   Partiklerne bliver først lavet, når de skal bruges, så der
+   ikke kommer et hak i starten på langsomme enheder.
    ============================================================= */
-function mønter(){
-  if (reduced) return;
-  for (let i = 0; i < 26; i++){
-    const c = document.createElement("div");
-    c.className = "coin";
-    const s = 8 + Math.random() * 9;
-    c.style.width = c.style.height = s + "px";
-    c.style.left = (40 + Math.random() * 20) + "%";
-    c.style.top = "32%";
-    c.style.setProperty("--cx", (Math.random() * 260 - 130) + "px");
-    c.style.setProperty("--cy", (-90 - Math.random() * 160) + "px");
-    c.style.setProperty("--cr", (Math.random() * 720 - 360) + "deg");
-    c.style.animation = `coinfly ${.9 + Math.random() * .9}s cubic-bezier(.2,.7,.4,1) forwards`;
-    c.style.animationDelay = (Math.random() * .25) + "s";
-    chest.appendChild(c);
-    setTimeout(() => c.remove(), 2600);
+const FX = (() => {
+  const host   = Object.assign(document.createElement("div"), { id:"fx" });
+  const warmL  = Object.assign(document.createElement("div"), { id:"warm" });
+  const flashL = Object.assign(document.createElement("div"), { id:"flash" });
+  document.body.append(warmL, host, flashL);
+
+  const rnd = (a,b) => a + Math.random()*(b-a);
+  const nu  = (t, fn) => setTimeout(fn, t);
+  const FARVER = ["#ffe89a","#e8c66a","#c8973f","#3fc6dd","#bdeef7","#e2705a","#fdf7ea","#f5952b","#9a6ad8","#5fce93"];
+
+  function node(cls, css){
+    const d = document.createElement("div");
+    d.className = cls; d.style.cssText = css;
+    host.appendChild(d);
+    return d;
   }
-}
-function konfetti(){
-  if (reduced) return;
-  const host = document.getElementById("burst");
-  const farver = ["#e8c66a","#c8973f","#3fc6dd","#bdeef7","#e2705a","#0d7ea3","#fdf7ea","#f5952b"];
-  const r = chest.getBoundingClientRect();
-  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  for (let i = 0; i < 100; i++){
-    const c = document.createElement("div");
-    c.className = "conf";
-    const ang = Math.random() * Math.PI * 2, dist = 90 + Math.random() * 460;
-    c.style.left = cx + "px"; c.style.top = cy + "px";
-    c.style.background = farver[i % farver.length];
-    c.style.setProperty("--x", Math.cos(ang) * dist + "px");
-    c.style.setProperty("--y", (Math.sin(ang) * dist - 120) + "px");
-    c.style.setProperty("--r", (Math.random() * 900 - 450) + "deg");
-    if (i % 4 === 0){ c.style.width = "8px"; c.style.height = "8px"; c.style.borderRadius = "50%"; }
-    c.style.animation = `fly ${1.3 + Math.random() * 1.5}s cubic-bezier(.15,.6,.4,1) forwards`;
-    host.appendChild(c);
-    setTimeout(() => c.remove(), 3200);
+  const kill = (el, ms) => setTimeout(() => el.remove(), ms);
+
+  /* spreder mange partikler ud over et tidsvindue i små puljer */
+  function drys(antal, vindue, fn){
+    const puljer = Math.max(1, Math.ceil(antal / 8));
+    const pr = Math.ceil(antal / puljer);
+    for (let p = 0; p < puljer; p++)
+      nu(p * (vindue / puljer), () => { for (let i = 0; i < pr; i++) fn(); });
   }
-}
+
+  /* ---------- lys ---------- */
+  function glimt(cx, cy, dur){
+    flashL.style.setProperty("--fx", (cx / innerWidth  * 100) + "%");
+    flashL.style.setProperty("--fy", (cy / innerHeight * 100) + "%");
+    flashL.style.animation = "none"; void flashL.offsetWidth;
+    flashL.style.animation = `fx-flash ${dur}ms ease-out`;
+  }
+  function varmtHav(dur){
+    warmL.style.animation = "none"; void warmL.offsetWidth;
+    warmL.style.animation = `fx-warm ${dur}ms ease-in-out`;
+  }
+  function straale(cx, cy, dur){
+    const h = cy + 40, w = Math.min(innerWidth * 1.15, 940);
+    const d = node("fx-ray", `left:${cx}px;top:${cy-h}px;width:${w}px;height:${h}px`);
+    d.style.animation = `fx-ray ${dur}ms cubic-bezier(.2,.7,.3,1) forwards`;
+    kill(d, dur + 200);
+  }
+  function ring(cx, cy, size, dur){
+    const d = node("fx-ring", `left:${cx}px;top:${cy}px;width:${size}px;height:${size}px`);
+    d.style.animation = `fx-ring ${dur}ms cubic-bezier(.1,.6,.3,1) forwards`;
+    kill(d, dur + 150);
+  }
+
+  /* ---------- mønter ---------- */
+  function coin(x, y, s, dur, dx, op, ned){
+    const o = node("fx-coin", `left:${x}px;top:${y}px;width:${s}px;height:${s}px;margin-left:${-s/2}px;margin-top:${-s/2}px`);
+    const yEl = document.createElement("div"); yEl.className = "cy";
+    const f   = document.createElement("div"); f.className = "cf";
+    yEl.appendChild(f); o.appendChild(yEl);
+    o.style.setProperty("--cx", dx + "px");
+    yEl.style.setProperty("--cup", op + "px");
+    yEl.style.setProperty("--cdn", ned + "px");
+    o.style.animation   = `fx-cx ${dur}ms linear forwards, fx-fade ${dur}ms linear forwards`;
+    yEl.style.animation = `fx-cy ${dur}ms forwards`;
+    f.style.animation   = `fx-spin ${rnd(480,900)}ms linear infinite`;
+    kill(o, dur + 250);
+  }
+  function fontaene(cx, cy, antal, spredning){
+    for (let i = 0; i < antal; i++)
+      coin(cx, cy, rnd(9,20), rnd(1700,2700),
+           rnd(-spredning, spredning), -rnd(200, innerHeight*.82), rnd(40,220));
+  }
+  function guldregn(antal, vindue){
+    drys(antal, vindue, () =>
+      coin(rnd(0, innerWidth), -30, rnd(8,18), rnd(2600,4200),
+           rnd(-90,90), rnd(20,90), innerHeight + 140));
+  }
+
+  /* ---------- konfetti ---------- */
+  function stykke(x, y, dur, dx, op, ned){
+    const w = rnd(7,12), h = rnd(11,19);
+    const o = node("fx-conf", `left:${x}px;top:${y}px;width:${w}px;height:${h}px`);
+    const yEl = document.createElement("div"); yEl.className = "cfy";
+    const b   = document.createElement("div"); b.className = "cfi";
+    b.style.background = FARVER[Math.floor(Math.random()*FARVER.length)];
+    if (Math.random() < .2) b.style.borderRadius = "50%";
+    yEl.appendChild(b); o.appendChild(yEl);
+    o.style.setProperty("--x", dx + "px");
+    yEl.style.setProperty("--yup", op + "px");
+    yEl.style.setProperty("--ydn", ned + "px");
+    b.style.setProperty("--r0", rnd(-40,40) + "deg");
+    b.style.setProperty("--r1", rnd(140,260) + "deg");
+    o.style.animation   = `fx-cfx ${dur}ms cubic-bezier(.1,.7,.3,1) forwards, fx-fade ${dur}ms linear forwards`;
+    yEl.style.animation = `fx-cfy ${dur}ms forwards`;
+    b.style.animation   = `fx-flut ${rnd(700,1500)}ms linear infinite`;
+    kill(o, dur + 250);
+  }
+  function boelge(cx, cy, antal, kraft, retning){
+    for (let i = 0; i < antal; i++){
+      const dx = retning ? retning * rnd(kraft*.25, kraft*1.6) : rnd(-kraft, kraft);
+      stykke(cx, cy, rnd(2600,4200), dx,
+             -rnd(kraft*.35, kraft*1.05), rnd(innerHeight*.35, innerHeight*.95));
+    }
+  }
+  function storm(antal, vindue){
+    drys(antal, vindue, () =>
+      stykke(rnd(0, innerWidth), -30, rnd(3800,6000),
+             rnd(-140,140), rnd(10,70), innerHeight + 160));
+  }
+
+  /* ---------- glimt og bobler ---------- */
+  function glimtRegn(antal, vindue){
+    drys(antal, vindue, () => {
+      const s = rnd(10,26), dur = rnd(700,1200);
+      const d = node("fx-spark", `left:${rnd(2,98)}vw;top:${rnd(2,92)}vh;width:${s}px;height:${s}px`);
+      d.style.animation = `fx-twinkle ${dur}ms ease-in-out forwards`;
+      kill(d, dur + 120);
+    });
+  }
+  function bobleskyl(antal, skridt){
+    for (let i = 0; i < antal; i++) nu(i*skridt, spawnBubble);
+  }
+
+  /* ---------- dyrene jubler ---------- */
+  function dyreneJubler(fra){
+    document.querySelectorAll(".swim .bob").forEach(b => {
+      const r = b.getBoundingClientRect();
+      const t = fra === "venstre" ? r.left / innerWidth
+              : fra === "højre"   ? 1 - r.left / innerWidth
+              : Math.random();
+      nu(Math.max(0, Math.min(1, t)) * 1100, () => {
+        b.classList.add("cheer");
+        nu(1200, () => b.classList.remove("cheer"));
+      });
+    });
+  }
+
+  function fest(){
+    const r    = chest.getBoundingClientRect();
+    const cx   = r.left + r.width/2, cy = r.top + r.height*.30;
+    const stor = Math.max(innerWidth, innerHeight) * 1.8;
+    const bund = innerHeight * .98;
+
+    chest.classList.add("party");
+    nu(12100, () => chest.classList.remove("party"));
+
+    if (reduced){ glimt(cx, cy, 900); return; }
+
+    /* ---- AKT 1 (0-3 s): eksplosionen ---- */
+    glimt(cx, cy, 900);
+    varmtHav(4200);
+    straale(cx, cy, 4600);
+    ring(cx, cy, stor, 1500);
+    nu(300,  () => ring(cx, cy, stor*.80, 1500));
+    nu(600,  () => ring(cx, cy, stor*.60, 1500));
+    fontaene(cx, cy, 30, 230);
+    nu(420,  () => fontaene(cx, cy, 24, 360));
+    nu(980,  () => fontaene(cx, cy, 20, 470));
+    nu(260,  () => boelge(cx, cy, 44, 340));
+    nu(900,  () => boelge(cx, cy, 34, 420));
+    nu(1200, () => { boelge(innerWidth*.06, bund, 26, 430); boelge(innerWidth*.94, bund, 26, 430); });
+    bobleskyl(55, 45);
+    glimtRegn(44, 3000);
+    nu(900,  () => dyreneJubler());
+
+    /* ---- AKT 2 (3-6 s): festen breder sig ud til siderne ---- */
+    nu(3400, () => { glimt(cx, cy, 700); ring(cx, cy, stor*.90, 1600); });
+    nu(3500, () => fontaene(cx, cy, 24, 520));
+    nu(4300, () => fontaene(cx, cy, 18, 620));
+    nu(4000, () => boelge(24, innerHeight*.62, 30, 520,  1));            /* kanon fra venstre */
+    nu(4200, () => boelge(innerWidth-24, innerHeight*.62, 30, 520, -1)); /* kanon fra højre   */
+    nu(4600, () => boelge(cx, cy, 30, 520));
+    nu(3600, () => { bobleskyl(40, 55); glimtRegn(52, 2400); });
+    nu(5000, () => dyreneJubler("venstre"));
+
+    /* ---- AKT 3 (6-9 s): klimaks med guldregn over hele skærmen ---- */
+    nu(6000, () => {
+      glimt(cx, cy, 1100);
+      varmtHav(3600);
+      straale(cx, cy, 3800);
+      ring(cx, cy, stor, 1800);
+      fontaene(cx, cy, 34, 300);
+      guldregn(40, 2400);
+      glimtRegn(80, 2800);
+      bobleskyl(60, 42);
+    });
+    nu(6300, () => ring(cx, cy, stor*.85, 1800));
+    nu(6400, () => storm(60, 1800));
+    nu(6600, () => { ring(cx, cy, stor*.70, 1800); boelge(cx, cy, 38, 560); });
+    nu(6900, () => ring(cx, cy, stor*.55, 1800));
+    nu(7000, () => fontaene(cx, cy, 26, 480));
+    nu(7400, () => dyreneJubler("højre"));
+
+    /* ---- AKT 4 (9-12 s): det lægger sig, gavekortet stiger op ---- */
+    nu(9200, () => { storm(34, 1600); glimtRegn(44, 2400); });
+    nu(9400, () => { guldregn(12, 1600); bobleskyl(36, 70); });
+  }
+
+  return { fest };
+})();
 
 /* =============================================================
    GAVEKORT
    ============================================================= */
 const voucherOverlay = document.getElementById("voucherOverlay");
-function visGavekort(){ voucherOverlay.classList.add("show"); }
+/* langsom = kortet stiger op nedefra over 2 sek. efter fanfaren */
+function visGavekort(langsom){
+  voucherOverlay.classList.toggle("slow", !!langsom);
+  void voucherOverlay.offsetWidth;
+  voucherOverlay.classList.add("show");
+}
 document.getElementById("vClose").addEventListener("click", () => { Lyd.klik(); voucherOverlay.classList.remove("show"); });
 voucherOverlay.addEventListener("click", e => { if (e.target === voucherOverlay) voucherOverlay.classList.remove("show"); });
 quizOverlay.addEventListener("click", e => { if (e.target === quizOverlay) quizOverlay.classList.remove("show"); });
