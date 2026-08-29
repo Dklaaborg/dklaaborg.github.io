@@ -250,7 +250,7 @@ body.opened #hint{opacity:0 !important;visibility:hidden !important;animation:no
 h1{
   font-family:'Playfair Display',Georgia,serif;font-weight:600;
   font-size:clamp(24px,4.6vmin,40px);line-height:1.06;margin:0 0 .34em;
-  color:var(--creme);letter-spacing:.3px;
+  color:var(--card-ink);letter-spacing:.3px;
 }
 h1 .navn{display:block;color:var(--coral-l);font-style:italic}
 /* verset: hver linje for sig, med hængende indryk hvis den må ombryde */
@@ -563,7 +563,7 @@ h1 .navn{display:block;color:var(--coral-l);font-style:italic}
 .voucher::before{content:"";position:absolute;inset:9px;border-radius:9px;border:1.5px solid rgba(232,198,106,.55);box-shadow:0 0 0 4px rgba(232,198,106,.10) inset;pointer-events:none}
 .v-crest{color:var(--gold-light);display:flex;justify-content:center;margin-bottom:6px}
 .v-crest svg{width:clamp(34px,5vmin,50px);height:clamp(34px,5vmin,50px)}
-.v-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(19px,3.1vmin,29px);letter-spacing:.22em;text-transform:uppercase;color:var(--creme);margin:0 0 4px}
+.v-title{font-family:'Playfair Display',serif;font-weight:600;font-size:clamp(19px,3.1vmin,29px);letter-spacing:.22em;text-transform:uppercase;color:var(--card-ink);margin:0 0 4px}
 .v-sub{font-size:clamp(11px,1.55vmin,13px);letter-spacing:.2em;text-transform:uppercase;color:var(--card-soft);margin-bottom:clamp(14px,2.4vmin,24px)}
 .v-items{display:grid;gap:clamp(9px,1.6vmin,14px);text-align:left}
 .v-item{display:flex;gap:clamp(11px,1.9vmin,17px);align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(232,198,106,.30);border-radius:12px;padding:clamp(12px,2vmin,18px)}
@@ -586,6 +586,23 @@ h1 .navn{display:block;color:var(--coral-l);font-style:italic}
 }
 #sound svg{width:20px;height:20px}
 #sound:active{transform:scale(.94)}
+
+/* ---------- FANFARE IGEN — nede i venstre hjørne ---------- */
+#replay{
+  position:fixed;z-index:70;
+  left:max(12px, env(safe-area-inset-left));
+  bottom:max(12px, env(safe-area-inset-bottom));
+  display:flex;align-items:center;gap:8px;
+  font-family:'Lora',serif;font-size:clamp(12.5px,1.7vmin,14.5px);line-height:1;
+  padding:10px 17px 10px 13px;border-radius:999px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.45);background:rgba(3,44,67,.32);color:rgba(255,255,255,.92);
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.2,.9,.3,1), visibility .5s;
+}
+#replay.vis{opacity:1;visibility:visible;transform:none}
+#replay.vis:active{transform:scale(.96)}
+#replay svg{width:17px;height:17px;flex:0 0 auto}
 
 /* ============================================================
    PORTRÆT / TELEFON
@@ -1049,6 +1066,14 @@ h1 .navn{display:block;color:var(--coral-l);font-style:italic}
   <div class="sandpuff" id="sandpuff"></div>
 </button>
 
+<!-- SE FANFAREN IGEN -->
+<button id="replay" type="button" aria-label="Kør fanfaren igen">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>
+  </svg>
+  <span id="replayTekst">Fanfare</span>
+</button>
+
 <!-- QUIZ -->
 <div class="overlay" id="quizOverlay">
   <div class="sheet" id="quizSheet">
@@ -1112,6 +1137,7 @@ const CONFIG = {
   afsender: "David og Julie",
 
   forsideHint: "Hold fingeren på seglet",
+  fanfareKnap: "Fanfare",
 
   /* knapperne i fun-fact-pop-up'en */
   naesteKnap: "Næste spørgsmål",
@@ -1712,6 +1738,7 @@ document.querySelector("h1").childNodes[0].nodeValue = CONFIG.overskrift;
 document.getElementById("greetEl").innerHTML = CONFIG.hilsen.map(p => `<p>${p}</p>`).join("");
 document.getElementById("signEl").innerHTML = `<small>${CONFIG.afsenderLinje}</small>${CONFIG.afsender}`;
 document.getElementById("hint").textContent = CONFIG.forsideHint;
+document.getElementById("replayTekst").textContent = CONFIG.fanfareKnap;
 document.getElementById("vSubEl").textContent = CONFIG.gavekortUndertekst;
 document.getElementById("vToEl").textContent = CONFIG.gavekortTil;
 document.getElementById("vFromEl").textContent = CONFIG.gavekortFra;
@@ -1885,6 +1912,36 @@ faktaNext.addEventListener("click", () => {
 qPrev.addEventListener("click", () => { Lyd.klik(); gaaTil(qi - 1); });
 qNext.addEventListener("click", () => { Lyd.klik(); gaaTil(qi + 1); });
 
+/* ---- fanfaren: bruges både når kisten åbnes og af Fanfare-knappen ---- */
+const replayKnap = document.getElementById("replay");
+let fanfareKoerer = false;
+
+/* knappen vises kun når kisten er åbnet, kortet er foldet ud,
+   der ikke er noget overlay fremme, og fanfaren ikke allerede kører */
+function opdaterFanfareKnap(){
+  const overlayFremme = [quizOverlay, faktaOverlay, voucherOverlay]
+    .some(o => o.classList.contains("show"));
+  replayKnap.classList.toggle("vis",
+    laastOp && !fanfareKoerer && !overlayFremme && book.classList.contains("open"));
+}
+
+function koerFanfare(){
+  if (fanfareKoerer) return;                 /* aldrig to shows oven i hinanden */
+  fanfareKoerer = true;
+  chest.classList.remove("ready");           /* ingen klik midt i fanfaren */
+  opdaterFanfareKnap();
+
+  setTimeout(() => { Lyd.fanfare(); FX.fest(); }, 380);
+  setTimeout(() => visGavekort(!reduced), reduced ? 1200 : 10380);
+  setTimeout(() => {
+    fanfareKoerer = false;
+    chest.classList.add("ready");
+    opdaterFanfareKnap();
+  }, reduced ? 1600 : 12600);
+}
+
+replayKnap.addEventListener("click", () => { Lyd.wake(); Lyd.klik(); koerFanfare(); });
+
 /* det sidste spørgsmål åbner kisten — de øvrige behøver ikke være besvaret */
 function laasOp(){
   laastOp = true;
@@ -1892,12 +1949,9 @@ function laasOp(){
   faktaOverlay.classList.remove("show");
   chestInner.classList.remove("idle");
   chest.classList.add("live","opened");
-  chest.classList.remove("ready");           /* ingen klik midt i fanfaren */
   Lyd.knirk();
   setTimeout(() => chest.classList.add("lidback"), 170);
-  setTimeout(() => { Lyd.fanfare(); FX.fest(); }, 380);
-  setTimeout(() => visGavekort(!reduced), reduced ? 1200 : 10380);
-  setTimeout(() => chest.classList.add("ready"), reduced ? 1600 : 12600);
+  koerFanfare();                             /* ved genafspilning står kisten bare åben */
 }
 
 chest.addEventListener("click", () => {
@@ -2122,6 +2176,12 @@ function visGavekort(langsom){
 document.getElementById("vClose").addEventListener("click", () => { Lyd.klik(); voucherOverlay.classList.remove("show"); });
 voucherOverlay.addEventListener("click", e => { if (e.target === voucherOverlay) voucherOverlay.classList.remove("show"); });
 quizOverlay.addEventListener("click", e => { if (e.target === quizOverlay) quizOverlay.classList.remove("show"); });
+
+/* Fanfare-knappen følger med i om et overlay er fremme, eller om kortet er foldet ud.
+   Overvågeren fanger alle veje — også lukning ved klik uden for et overlay. */
+const knapVagt = new MutationObserver(opdaterFanfareKnap);
+[quizOverlay, faktaOverlay, voucherOverlay, book].forEach(el =>
+  knapVagt.observe(el, { attributes: true, attributeFilter: ["class"] }));
 
 /* =============================================================
    LYDKNAP + BOBLER VED BERØRING
